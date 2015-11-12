@@ -15,6 +15,7 @@ public class GmailLoginController {
     private OAuthCredential credential;
     private boolean addListener = true;
     private GmailLoginStage stage;
+    private ConnectDB con;
 
     public GmailLoginController(GmailLoginStage stage){
         this.stage = stage;
@@ -36,6 +37,11 @@ public class GmailLoginController {
                     HTMLTitleElement title = (HTMLTitleElement) head.getElementsByTagName("title").item(0);
 
                     credential.setAuthorization_code(title.getTextContent().split("=")[1]);
+                    if (credential.getAccessToken()){
+                        con = new ConnectDB();
+                        con.addCredential(credential);
+                    }
+
                     stage.close();
                     stage.congratulation();
                 }
@@ -46,7 +52,10 @@ public class GmailLoginController {
     public void addUsernameToCredential(OAuthCredential credential){
         HTMLInputElement input = (HTMLInputElement) stage.engine.getDocument().getElementById("Email");
         EventTarget nextButton = (EventTarget) stage.engine.getDocument().getElementById("next");
-        nextButton.addEventListener("click", e -> credential.username = input.getValue(), false);
+        nextButton.addEventListener("click", e -> {
+            credential.username = input.getValue();
+            credential.username += (!credential.username.contains("@"))?"@gmail.com":"";
+        }, false);
     }
 
     public OAuthCredential getCredential(){

@@ -61,7 +61,7 @@ public class TestIMAP_SMTP {
             store = session.getStore();
             store.connect(currentCredential.username, currentCredential.access_token);
             System.out.println("Connect to IMAP server successfully!");
-            System.out.println("Access token expire in : " + currentCredential.expires_in);
+            System.out.println("Access token expire at : " + currentCredential.expires_time);
         } catch (MessagingException e){
             e.printStackTrace();
         }

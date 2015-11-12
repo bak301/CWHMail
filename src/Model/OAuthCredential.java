@@ -12,7 +12,9 @@ import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.InputStreamReader;
 import java.util.ArrayList;
+import java.util.Calendar;
 import java.util.List;
+import java.util.TimeZone;
 
 /**
  * Created by vn130 on 11/7/2015.
@@ -26,8 +28,8 @@ public class OAuthCredential {
     public String username;
     private String authorization_code;
     public String access_token;
-    public int expires_in;
-    private String refresh_token = "";
+    public String expires_time;
+    public String refresh_token = "";
 
     public void setAuthorization_code(String code){
         this.authorization_code = code;
@@ -69,14 +71,22 @@ public class OAuthCredential {
                     this.access_token = toBeProcess.substring(0, toBeProcess.length() - 1).replace("\"","").trim();
                     System.out.println(this.access_token);
                 } else if (line.contains("expires_in")){
-                    this.expires_in = Integer.parseInt(line.split(":")[1].replace(",","").trim());
+                    int expires_in = Integer.parseInt(line.split(":")[1].replace(",","").trim());
+                    long now = System.currentTimeMillis();
+
+                    Calendar cal = Calendar.getInstance();
+                    cal.setTimeZone(TimeZone.getTimeZone("Etc/GMT+7"));
+                    cal.setTimeInMillis(now);
+                    cal.add(Calendar.SECOND, expires_in);
+
+                    this.expires_time = cal.getTime().toString();
                 } else if (line.contains("refresh_token")){
                     this.refresh_token = line.split(":")[1].replace("\"","").trim();
                 }
             }
             System.out.println("New refresh token saved : " + this.refresh_token);
             System.out.println("New access token saved : " + this.access_token);
-            System.out.println("Acess token will expire in : " + this.expires_in);
+            System.out.println("Acess token will expire at : " + this.expires_time);
             return true;
         } catch (IOException e){
             e.printStackTrace();
