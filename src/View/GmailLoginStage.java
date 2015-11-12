@@ -26,7 +26,7 @@ public class GmailLoginStage extends Stage{
     public GmailLoginStage() {
         panel.setContent(view);
         this.setResizable(true);
-        this.setScene(new Scene(panel,800,600));
+        this.setScene(new Scene(panel));
         alert = new Alert(Alert.AlertType.CONFIRMATION);
     }
 
@@ -40,7 +40,7 @@ public class GmailLoginStage extends Stage{
     public void congratulation(){
         alert.setTitle("Congratulation !");
         alert.setHeaderText(null);
-        alert.setContentText("You can access your Gmail account from now on !");
+        alert.setContentText("You can access your Gmail account now !");
         alert.showAndWait();
     }
 }
