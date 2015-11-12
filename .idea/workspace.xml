@@ -1,29 +1,9 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <project version="4">
   <component name="ChangeListManager">
-    <list default="true" id="cdb932d9-7e58-4d94-93a9-e7b232ef17da" name="Default" comment="Chỉnh lại tí giao diện Login, thay đổi đường dẫn đến các file">
-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/.idea/vcs.xml" />
-      <change type="DELETED" beforePath="$PROJECT_DIR$/out/production/CWHMail/ImageLibrary/Gmail.png" afterPath="" />
-      <change type="DELETED" beforePath="$PROJECT_DIR$/out/production/CWHMail/ImageLibrary/Thumbs.db" afterPath="" />
-      <change type="DELETED" beforePath="$PROJECT_DIR$/out/production/CWHMail/ImageLibrary/logoCWH.png" afterPath="" />
-      <change type="DELETED" beforePath="$PROJECT_DIR$/out/production/CWHMail/ImageLibrary/outlook2.png" afterPath="" />
-      <change type="DELETED" beforePath="$PROJECT_DIR$/out/production/CWHMail/ImageLibrary/yahoomail.png" afterPath="" />
-      <change type="DELETED" beforePath="$PROJECT_DIR$/out/production/CWHMail/MainApplication/login.fxml" afterPath="" />
-      <change type="DELETED" beforePath="$PROJECT_DIR$/out/production/CWHMail/MainApplication/mailBox.fxml" afterPath="" />
-      <change type="DELETED" beforePath="$PROJECT_DIR$/out/production/CWHMail/MainApplication/panda.css" afterPath="" />
-      <change type="DELETED" beforePath="$PROJECT_DIR$/src/ImageLibrary/Thumbs.db" afterPath="" />
-      <change type="MOVED" beforePath="$PROJECT_DIR$/src/ImageLibrary/Gmail.png" afterPath="$PROJECT_DIR$/src/GUI/img/Gmail.png" />
-      <change type="MOVED" beforePath="$PROJECT_DIR$/src/ImageLibrary/logoCWH.png" afterPath="$PROJECT_DIR$/src/GUI/img/logoCWH.png" />
-      <change type="MOVED" beforePath="$PROJECT_DIR$/src/ImageLibrary/outlook2.png" afterPath="$PROJECT_DIR$/src/GUI/img/outlook2.png" />
-      <change type="MOVED" beforePath="$PROJECT_DIR$/src/ImageLibrary/yahoomail.png" afterPath="$PROJECT_DIR$/src/GUI/img/yahoomail.png" />
-      <change type="MOVED" beforePath="$PROJECT_DIR$/src/MainApplication/login.fxml" afterPath="$PROJECT_DIR$/src/GUI/fxml/login.fxml" />
-      <change type="MOVED" beforePath="$PROJECT_DIR$/src/MainApplication/mailBox.fxml" afterPath="$PROJECT_DIR$/src/GUI/fxml/mailBox.fxml" />
-      <change type="MOVED" beforePath="$PROJECT_DIR$/src/MainApplication/panda.css" afterPath="$PROJECT_DIR$/src/GUI/css/panda.css" />
+    <list default="true" id="cdb932d9-7e58-4d94-93a9-e7b232ef17da" name="Default" comment="">
       <change type="MODIFICATION" beforePath="$PROJECT_DIR$/out/production/CWHMail/MainApplication/Main.class" afterPath="$PROJECT_DIR$/out/production/CWHMail/MainApplication/Main.class" />
       <change type="MODIFICATION" beforePath="$PROJECT_DIR$/.idea/workspace.xml" afterPath="$PROJECT_DIR$/.idea/workspace.xml" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/src/Controller/LoginController.java" afterPath="$PROJECT_DIR$/src/Controller/LoginController.java" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/src/MainApplication/Main.java" afterPath="$PROJECT_DIR$/src/MainApplication/Main.java" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/src/View/GmailLoginStage.java" afterPath="$PROJECT_DIR$/src/View/GmailLoginStage.java" />
     </list>
     <ignored path="JavaFxApplication.iws" />
     <ignored path=".idea/workspace.xml" />
@@ -658,6 +638,13 @@
       <updated>1359379246138</updated>
       <workItem from="1359379250712" duration="1302000" />
     </task>
+    <task id="LOCAL-00001" summary="Chỉnh lại tí giao diện Login, thay đổi đường dẫn đến các file">
+      <created>1447320288198</created>
+      <option name="number" value="00001" />
+      <option name="project" value="LOCAL" />
+      <updated>1447320288198</updated>
+    </task>
+    <option name="localTasksCounter" value="2" />
     <servers />
   </component>
   <component name="TimeTrackingManager">
