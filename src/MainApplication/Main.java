@@ -16,7 +16,7 @@ public class Main extends Application {
     @Override
     public void start(Stage primaryStage) throws Exception{
         ConnectDB db = new ConnectDB();
-        String file = (db.getCredentials() != null) ? "mailBox":"login";
+        String file = (db.getCredentials() == null) ? "mailBox":"login";
         Parent root = FXMLLoader.load(getClass().getResource("../GUI/fxml/" + file + ".fxml"));
         primaryStage.setTitle("Welcome !");
         primaryStage.setScene(new Scene(root));

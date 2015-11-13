@@ -1,6 +1,8 @@
 
 #panelmain{
     -fx-background-color: #6EDD7D;
+    /*-fx-background-image: url("../img/background.jpg");
+    -fx-background-size: cover;*/
 }
 
 #btnGmail,#btnOutlookmail,#btnYahoomail{
@@ -21,5 +23,91 @@
     -fx-text-fill: black;
     -fx-border-color: none;
     -fx-font-weight: bold;
+}
+
+
+/****************************************/
+
+#pnMainContent{
+    -fx-background-color: #FFFFFF;
+}
+
+#pnMenuContent{
+    -fx-background-color: #6EDD7D;
+}
+
+#pnLeftCollumn,#pnLeftBotColumn{
+    -fx-background-color: #BBFDC5;
+}
+
+#btnAddMaill,#btnOption,#btnListFriend{
+    -fx-background-color: #6EDD7D;
+    -fx-text-fill: #FFFFFF;
+    -fx-font-weight: bold;
+    -fx-background-repeat: no-repeat;
+}
+
+#btnAddMaill{
+    -fx-background-image: url("../img/addNewEmail.png");
+}
+
+#btnOption{
+    -fx-background-image: url("../img/option.png");
+}
+
+#btnListFriend{
+    -fx-background-image: url("../img/listFriend.png");
+}
+
+
+#btnAddMaill:hover,#btnListFriend:hover,#btnOption:hover,#btnFind:hover,#btnRemove:hover,#btnIbox, #btnMailStar:hover, #btnSentMail:hover, #btnMailTrash:hover, #btnTestMail:hover, #btnTrash:hover,#btnAll:hover,#btnUnRead:hover,#btnReaded:hover,#cbAll{
+    -fx-cursor: hand;
+}
+
+#btnAddMaill:pressed,#btnListFriend:pressed,#btnOption:pressed,#btnIbox:pressed, #btnMailStar:pressed, #btnSentMail:pressed, #btnMailTrash:pressed, #btnTestMail:pressed, #btnTrash:pressed,#btnAll:pressed,#btnUnRead:pressed,#btnReaded:pressed{
+    -fx-background-color: #00AE7A;
+}
+
+#btnFind:pressed,#btnRemove:pressed{
+    -fx-background-color: #E9EAED;
+}
+
+
+#pnBot{
+    -fx-border-color: #000000;
+    -fx-border-width: 1 0 0 0;
+}
+
+#pnTop{
+    -fx-border-color: #000000;
+    -fx-border-width: 0 0 1 0;
+}
+
+#btnRemove,#btnFind,#btnAll,#btnUnRead,#btnReaded{
+    -fx-background-color: #FFFFFF;
+}
+
+#btnRemove{
+    -fx-background-image: url("../img/trash.png");
+    -fx-background-repeat: no-repeat;
+}
+
+#btnFind{
+    -fx-background-image: url("../img/find.png");
+    -fx-background-repeat: no-repeat;
+}
+
+#btnIbox, #btnMailStar, #btnSentMail, #btnMailTrash, #btnTestMail, #btnTrash{
+    -fx-background-color: #BBFDC5;
+    -fx-text-fill: #000000;
+    -fx-font-weight: bold;
+}
+
+#cbAll{
+    -fx-background-color: #FFFFFF;
+
+    -fx-color: #FFFFFF;
+
+    -fx-radius: 0 0 0 0;
 }
 
