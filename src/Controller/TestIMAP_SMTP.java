@@ -86,8 +86,4 @@ public class TestIMAP_SMTP {
             throw new RuntimeException(e);
         }
     }
-
-    public void showFolderList(){
-        new GMailFolder(store).getAllFolder();
-    }
 }

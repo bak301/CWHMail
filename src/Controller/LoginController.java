@@ -17,6 +17,6 @@ public class LoginController {
     private void toGmailLogin(ActionEvent event){
         GmailLoginStage loginStage = new GmailLoginStage();
         loginStage.start();
-        loginStage.alert.setOnShown(e-> System.out.println("Mailbox opened !"));
+//        loginStage.alert.setOnShown(e-> System.out.println("Mailbox opened !"));
     }
 }

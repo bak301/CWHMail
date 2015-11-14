@@ -28,6 +28,14 @@ public class ConnectDB {
         System.out.println("Connected to user database !");
     }
 
+    public void close(){
+        try {
+            con.close();
+        } catch (SQLException e){
+            e.printStackTrace();
+        }
+    }
+
     private void init(){
         try {
             stm = con.createStatement();
@@ -69,9 +77,9 @@ public class ConnectDB {
 
     public boolean updateCredential(OAuthCredential credential){
         try {
-            String addCredential = "UPDATE UserAuth" +
-                    "SET ACCESS_TOKEN=?, EXPIRE_TIME=?, REFRESH_TOKEN=?" +
-                    "WHERE USERNAME=?";
+            String addCredential = "UPDATE UserAuth " +
+                    "SET ACCESS_TOKEN = ?, EXPIRE_TIME = ?, REFRESH_TOKEN = ?" +
+                    "WHERE USERNAME = ?";
             pstm = con.prepareStatement(addCredential);
             pstm.setString(1,credential.access_token);
             pstm.setString(2,credential.expires_time);
@@ -80,6 +88,7 @@ public class ConnectDB {
 
             if (pstm.executeUpdate() != 0){
                 pstm.close();
+                System.out.println("Updated new Access Token for current session !");
                 return true;
             }
         } catch (SQLException e){

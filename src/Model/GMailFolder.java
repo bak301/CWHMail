@@ -1,57 +1,34 @@
 package Model;
 
+import com.sun.xml.internal.ws.binding.FeatureListUtil;
+
 import javax.mail.Folder;
 import javax.mail.Message;
 import javax.mail.MessagingException;
 import javax.mail.Store;
+import java.lang.reflect.Array;
+import java.util.*;
 
 /**
  * Created by vn130 on 11/11/2015.
  */
 public class GMailFolder {
-    private Store currentStore;
-    private Folder GMAILFolder;
+    private ArrayList<Folder> folderList;
 
-    public GMailFolder(Store currentStore) {
-        this.currentStore = currentStore;
+    public List<Folder> getFolderList(Store currentStore){
         try {
-            this.GMAILFolder = currentStore.getDefaultFolder().getFolder("[Gmail]");
+            List<Folder> commonFolderList = Arrays.asList(currentStore.getDefaultFolder().list());
+            List<Folder> gmailFolderList = Arrays.asList(currentStore.getDefaultFolder().getFolder("[Gmail]").list());
+
+            // Add all child folder of [Gmail] to the list
+            folderList = new ArrayList<>();
+            folderList.addAll(commonFolderList);
+            folderList.addAll(gmailFolderList);
+            // Remove [Gmail] common folder
+            folderList.removeIf(e->e.getName().equals("[Gmail]"));
         } catch (MessagingException e){
             e.printStackTrace();
         }
-    }
-
-    public void getAllFolder(){
-        try {
-            Folder inboxFolder = currentStore.getDefaultFolder().getFolder("INBOX");
-            System.out.println("INBOX folder found !");
-            inboxFolder.open(Folder.READ_WRITE);
-            Message[] inbox = inboxFolder.getMessages();
-            System.out.println("Get INBOX completed !");
-
-            Folder trashFolder = currentStore.getDefaultFolder().getFolder("Trash");
-            System.out.println("TRASH folder found !");
-            trashFolder.open(Folder.READ_WRITE);
-            Message[] trash = trashFolder.getMessages();
-            System.out.println("Get TRASH completed");
-
-            Folder gmailFolder = currentStore.getDefaultFolder().getFolder("[Gmail]");
-            System.out.println("[Gmail] folder found !");
-
-            Folder[] f = currentStore.getDefaultFolder().getFolder("[Gmail]").list();
-            for (Folder folder : f){
-                System.out.println(folder.getName()+ "\n");
-            }
-
-            System.out.println("---------------");
-
-            Folder[] f2 = currentStore.getDefaultFolder().list();
-            for (Folder folder : f2){
-                System.out.println(folder.getName()+ "\n");
-            }
-
-        } catch (MessagingException e){
-            e.printStackTrace();
-        }
+        return folderList;
     }
 }

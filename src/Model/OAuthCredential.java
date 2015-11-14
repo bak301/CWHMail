@@ -52,10 +52,12 @@ public class OAuthCredential {
             nameValuePairs.add(new BasicNameValuePair("client_id", OAuthCredential.CLIENT_ID));
             nameValuePairs.add(new BasicNameValuePair("client_secret", OAuthCredential.CLIENT_SECRET));
             if (this.refresh_token.equals("")){
+                System.out.println(" Doing Authorization request !!!!!");
                 nameValuePairs.add(new BasicNameValuePair("grant_type", "authorization_code"));
                 nameValuePairs.add(new BasicNameValuePair("redirect_uri", OAuthCredential.REDIRECT_URI));
                 nameValuePairs.add(new BasicNameValuePair("code", this.authorization_code));
             } else {
+                System.out.println(" Doing Refresh Token request !!!!");
                 nameValuePairs.add(new BasicNameValuePair("grant_type", "refresh_token"));
                 nameValuePairs.add(new BasicNameValuePair("refresh_token", this.refresh_token));
             }
