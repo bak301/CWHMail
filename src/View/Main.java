@@ -1,4 +1,4 @@
-package MainApplication;
+package View;
 
 import Controller.ConnectDB;
 import Controller.MailBoxController;
@@ -7,13 +7,9 @@ import javafx.application.Application;
 import javafx.fxml.FXMLLoader;
 import javafx.scene.Parent;
 import javafx.scene.Scene;
-import javafx.scene.control.Alert;
 import javafx.stage.Stage;
 
-import java.io.File;
-import java.io.IOException;
 import java.util.ArrayList;
-import java.util.List;
 
 public class Main extends Application {
 
@@ -24,15 +20,14 @@ public class Main extends Application {
         ArrayList<OAuthCredential> credentialsList = db.getCredentials();
 
         Parent root;
-        if (credentialsList != null){
-            root = FXMLLoader.load(getClass().getResource("../GUI/fxml/mailBox.fxml"));
+        if (credentialsList != null){// Prepare mail for mailBox
+            mailBoxInit(credentialsList,db);
+
+            root = FXMLLoader.load(getClass().getResource("../View/GUI/fxml/mailBox.fxml"));
             primaryStage.setScene(new Scene(root));
             primaryStage.show();
-
-            // Prepare mail for mailBox
-            mailBoxInit(credentialsList,db);
         } else {
-            root = FXMLLoader.load(getClass().getResource("../GUI/fxml/login.fxml"));
+            root = FXMLLoader.load(getClass().getResource("../View/GUI/fxml/login.fxml"));
             primaryStage.setScene(new Scene(root));
             primaryStage.show();
         }

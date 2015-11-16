@@ -26,7 +26,7 @@ public class TestIMAP_SMTP {
         props.put("mail.smtp.ssl.enable","true");
         props.put("mail.smtp.host", "smtp.gmail.com");
         props.put("mail.smtp.port", "465");
-        props.put("mai.from", currentCredential.username);
+        props.put("mai.from", currentCredential.getUsername());
 
         // Properties for OAuth 2.0
         props.put("mail.smtp.sasl.enable", "true");
@@ -36,7 +36,7 @@ public class TestIMAP_SMTP {
         session = Session.getInstance(props, new Authenticator() {
             @Override
             protected PasswordAuthentication getPasswordAuthentication() {
-                return new PasswordAuthentication(currentCredential.username, currentCredential.access_token);
+                return new PasswordAuthentication(currentCredential.getUsername(), currentCredential.getAccess_token());
             }
         });
         return session.getDebug();
@@ -59,9 +59,9 @@ public class TestIMAP_SMTP {
         session = Session.getInstance(props);
         try {
             store = session.getStore();
-            store.connect(currentCredential.username, currentCredential.access_token);
+            store.connect(currentCredential.getUsername(), currentCredential.getAccess_token());
             System.out.println("Connect to IMAP server successfully!");
-            System.out.println("Access token expire at : " + currentCredential.expires_time);
+            System.out.println("Access token expire at : " + currentCredential.getExpires_time());
         } catch (MessagingException e){
             e.printStackTrace();
         }
@@ -71,7 +71,7 @@ public class TestIMAP_SMTP {
     public void sendTestMail(){
         try {
             Message message = new MimeMessage(session);
-            message.setFrom(new InternetAddress(currentCredential.username));
+            message.setFrom(new InternetAddress(currentCredential.getUsername()));
             message.setRecipients(Message.RecipientType.TO,
                     InternetAddress.parse("vn13014@yahoo.com"));
             message.setSubject("Testing Subject");

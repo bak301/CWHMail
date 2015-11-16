@@ -2,7 +2,9 @@ package Controller;
 
 import Model.GMailFolder;
 import Model.OAuthCredential;
-import org.apache.http.message.BasicNameValuePair;
+import Model.UserInfo;
+import com.sun.mail.imap.IMAPFolder;
+import com.sun.mail.imap.IMAPStore;
 
 import javax.mail.*;
 import java.util.*;
@@ -11,13 +13,15 @@ import java.util.*;
  * Created by vn130 on 11/12/2015.
  */
 public class MailBoxController {
-    public ArrayList<OAuthCredential> credentialList;
-    public ArrayList<Store> storeList;
+    private ArrayList<OAuthCredential> credentialList;
+    private ArrayList<UserInfo> userInfoList;
+    private ArrayList<IMAPStore> storeList;
     private ConnectDB db;
 
     public MailBoxController(ArrayList<OAuthCredential> credentials, ConnectDB db){
         this.db = db;
         this.credentialList = credentials;
+        this.userInfoList = db.getUserInfoList();
         storeList = new ArrayList<>();
         connectGmailIMAP();
     }
@@ -41,31 +45,43 @@ public class MailBoxController {
         for (OAuthCredential credential : credentialList){
             Session session = Session.getInstance(props);
             storeConnect(session, credential);
+
+            // Assign user info to credential
+            for (UserInfo userInfo : userInfoList){
+                if (credential.getUsername().equals(userInfo.getUsername())){
+                    credential.setUserInfo(userInfo);
+                }
+            }
+            FolderButtonController.currentName = credential.getUserInfo().getName();
         }
+        FolderButtonController.storeList = this.storeList;
+
+        db.close();
         System.out.println("Successfully connect all credentials to IMAP server !!");
     }
 
     private void storeConnect(Session session, OAuthCredential credential) {
         try {
-            Store store = session.getStore();
-            store.connect(credential.username, credential.access_token);
+            IMAPStore store = (IMAPStore) session.getStore();
+            store.connect(credential.getUsername(), credential.getAccess_token());
             storeList.add(store);
 
-            System.out.println("Connect " + credential.username + " to IMAP server successfully!");
-            System.out.println("Access token expire at : " + credential.expires_time);
+            System.out.println("Connect " + credential.getUsername() + " to IMAP server successfully!");
         } catch (MessagingException e){
-            credential.refresh_token = db.getRefreshToken(credential.username);
-            credential.getAccessToken();
+            e.printStackTrace();
+            System.out.println("Problem with access token !!");
+            // Get the refresh token from database
+            credential.setRefresh_token(db.getRefreshToken(credential.getUsername()));
+            credential.initCredentialandUserInfo();
             storeConnect(session, credential);
             db.updateCredential(credential);
-            db.close();
         }
     }
 
     public void test_showAllMail(){
-        for (Store store : storeList){
-            GMailFolder mainFolder = new GMailFolder();
-            List<Folder> folderList = mainFolder.getFolderList(store);
+        for (IMAPStore store : storeList){
+            GMailFolder mainFolder = new GMailFolder(store);
+            List<IMAPFolder> folderList = mainFolder.getFolderList();
 
             for (Folder f : folderList){
                 System.out.println(f.getFullName());

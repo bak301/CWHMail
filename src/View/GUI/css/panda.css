@@ -36,18 +36,18 @@
     -fx-background-color: #6EDD7D;
 }
 
-#pnLeftCollumn,#pnLeftBotColumn{
+#pnLeftColumn,#pnLeftBotColumn{
     -fx-background-color: #BBFDC5;
 }
 
-#btnAddMaill,#btnOption,#btnListFriend{
+#btnAddMail,#btnOption,#btnListFriend{
     -fx-background-color: #6EDD7D;
     -fx-text-fill: #FFFFFF;
     -fx-font-weight: bold;
     -fx-background-repeat: no-repeat;
 }
 
-#btnAddMaill{
+#btnAddMail{
     -fx-background-image: url("../img/addNewEmail.png");
 }
 
@@ -60,11 +60,11 @@
 }
 
 
-#btnAddMaill:hover,#btnListFriend:hover,#btnOption:hover,#btnFind:hover,#btnRemove:hover,#btnIbox, #btnMailStar:hover, #btnSentMail:hover, #btnMailTrash:hover, #btnTestMail:hover, #btnTrash:hover,#btnAll:hover,#btnUnRead:hover,#btnReaded:hover,#cbAll{
+#btnAddMail:hover,#btnListFriend:hover,#btnOption:hover,#btnFind:hover,#btnRemove:hover,#btnIbox, #btnMailStar:hover, #btnSentMail:hover, #btnMailTrash:hover, #btnTestMail:hover, #btnTrash:hover,#btnAll:hover,#btnUnRead:hover,#btnReaded:hover,#cbAll{
     -fx-cursor: hand;
 }
 
-#btnAddMaill:pressed,#btnListFriend:pressed,#btnOption:pressed,#btnIbox:pressed, #btnMailStar:pressed, #btnSentMail:pressed, #btnMailTrash:pressed, #btnTestMail:pressed, #btnTrash:pressed,#btnAll:pressed,#btnUnRead:pressed,#btnReaded:pressed{
+#btnAddMail:pressed,#btnListFriend:pressed,#btnOption:pressed,#btnIbox:pressed, #btnMailStar:pressed, #btnSentMail:pressed, #btnMailTrash:pressed, #btnTestMail:pressed, #btnTrash:pressed,#btnAll:pressed,#btnUnRead:pressed,#btnReaded:pressed{
     -fx-background-color: #00AE7A;
 }
 
@@ -97,7 +97,8 @@
     -fx-background-repeat: no-repeat;
 }
 
-#btnIbox, #btnMailStar, #btnSentMail, #btnMailTrash, #btnTestMail, #btnTrash{
+/*#btnIbox, #btnMailStar, #btnSentMail, #btnMailTrash, #btnTestMail, #btnTrash{*/
+.btnFolder {
     -fx-background-color: #BBFDC5;
     -fx-text-fill: #000000;
     -fx-font-weight: bold;

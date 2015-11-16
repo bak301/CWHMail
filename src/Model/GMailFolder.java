@@ -1,5 +1,7 @@
 package Model;
 
+import com.sun.mail.imap.IMAPFolder;
+import com.sun.mail.imap.IMAPStore;
 import com.sun.xml.internal.ws.binding.FeatureListUtil;
 
 import javax.mail.Folder;
@@ -13,12 +15,16 @@ import java.util.*;
  * Created by vn130 on 11/11/2015.
  */
 public class GMailFolder {
-    private ArrayList<Folder> folderList;
+    private ArrayList<IMAPFolder> folderList;
 
-    public List<Folder> getFolderList(Store currentStore){
+    public GMailFolder(IMAPStore currentStore){
+        initFolderList(currentStore);
+    }
+
+    private void initFolderList(IMAPStore currentStore){
         try {
-            List<Folder> commonFolderList = Arrays.asList(currentStore.getDefaultFolder().list());
-            List<Folder> gmailFolderList = Arrays.asList(currentStore.getDefaultFolder().getFolder("[Gmail]").list());
+            List<IMAPFolder> commonFolderList = Arrays.asList((IMAPFolder[]) currentStore.getDefaultFolder().list());
+            List<IMAPFolder> gmailFolderList = Arrays.asList((IMAPFolder[]) currentStore.getDefaultFolder().getFolder("[Gmail]").list());
 
             // Add all child folder of [Gmail] to the list
             folderList = new ArrayList<>();
@@ -29,6 +35,9 @@ public class GMailFolder {
         } catch (MessagingException e){
             e.printStackTrace();
         }
+    }
+
+    public List<IMAPFolder> getFolderList(){
         return folderList;
     }
 }

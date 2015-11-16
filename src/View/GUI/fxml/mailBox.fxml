@@ -14,7 +14,7 @@
 <?import javafx.scene.control.Label?>
 <?import java.net.URL?>
 
-<BorderPane fx:id="pnMainContent" maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="675.0" prefWidth="1200.0" xmlns="http://javafx.com/javafx/8" xmlns:fx="http://javafx.com/fxml/1">
+<BorderPane fx:id="pnMainContent" maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="675.0" prefWidth="1200.0" xmlns="http://javafx.com/javafx/8" xmlns:fx="http://javafx.com/fxml/1" fx:controller="Controller.FolderButtonController">
     <stylesheets>
         <URL value="@../css/panda.css" />
     </stylesheets>
@@ -27,26 +27,19 @@
                   <Image url="@../img/miniLogo.png" />
                </image>
             </ImageView>
-            <Button fx:id="btnAddMaill" layoutX="222.0" layoutY="11.0" maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" mnemonicParsing="false" prefHeight="30.0" prefWidth="124.0" text="       Viết email" />
+            <Button fx:id="btnAddMail" layoutX="222.0" layoutY="11.0" maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" mnemonicParsing="false" prefHeight="30.0" prefWidth="124.0" text="       Viết email" />
             <Button fx:id="btnOption" layoutX="1095.0" layoutY="9.0" maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" mnemonicParsing="false" prefHeight="36.0" prefWidth="36.0" />
             <Button fx:id="btnListFriend" layoutX="1015.0" layoutY="10.0" maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" mnemonicParsing="false" prefHeight="33.0" prefWidth="40.0" />
+            <Label fx:id="lbFullname" layoutX="831.0" layoutY="12.0" prefHeight="27.0" prefWidth="165.0" />
          </children></Pane>
    </top>
    <left>
-      <Pane fx:id="pnLeftCollumn" prefHeight="698.0" prefWidth="202.0" BorderPane.alignment="CENTER">
-         <children>
-            <Button fx:id="btnIbox" layoutX="39.0" layoutY="114.0" mnemonicParsing="false" text="Hộp thư đến" />
-            <Button fx:id="btnMailStar" layoutX="39.0" layoutY="154.0" mnemonicParsing="false" text="Thư gắn dấu sao" />
-            <Button fx:id="btnSentMail" layoutX="39.0" layoutY="196.0" mnemonicParsing="false" text="Thư Đã Gửi" />
-            <Button fx:id="btnMailTrash" layoutX="39.0" layoutY="239.0" mnemonicParsing="false" text="Thư rác" />
-            <Button fx:id="btnTestMail" layoutX="39.0" layoutY="283.0" mnemonicParsing="false" text="Thư nháp" />
-            <Button fx:id="btnTrash" layoutX="39.0" layoutY="324.0" mnemonicParsing="false" text="Thùng rác" />
-         </children></Pane>
+      <Pane fx:id="pnLeftColumn" prefHeight="698.0" prefWidth="202.0" BorderPane.alignment="CENTER" />
    </left>
    <center>
       <Pane prefHeight="200.0" prefWidth="200.0" BorderPane.alignment="CENTER">
          <children>
-            <Pane fx:id="pnBot" layoutX="21.0" layoutY="572.0" prefHeight="48.0" prefWidth="965.0">
+            <Pane fx:id="pnBot" layoutX="17.0" layoutY="575.0" prefHeight="48.0" prefWidth="965.0">
                <children>
                   <TextField layoutX="544.0" layoutY="8.0" prefHeight="33.0" prefWidth="353.0" />
                   <Button fx:id="btnRemove" layoutX="933.0" layoutY="8.0" mnemonicParsing="false" prefHeight="36.0" prefWidth="32.0" />
