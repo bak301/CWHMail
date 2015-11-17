@@ -7,7 +7,6 @@
 
 #btnGmail,#btnOutlookmail,#btnYahoomail{
     -fx-background-color: white;
-    -fx-border-color: none;
     -fx-text-fill: #6EDD7D;
     -fx-font-weight: bold;
 }
@@ -15,13 +14,11 @@
 #btnGmail:hover,#btnOutlookmail:hover,#btnYahoomail:hover{
     -fx-background-color: #E7E6E7;
     -fx-text-fill: black;
-    -fx-border-color: none;
     -fx-font-weight: bold;
 }
 #btnGmail:pressed,#btnOutlookmail:pressed,#btnYahoomail:pressed{
     -fx-background-color: #00AE7A;
     -fx-text-fill: black;
-    -fx-border-color: none;
     -fx-font-weight: bold;
 }
 
@@ -74,13 +71,7 @@
 
 
 #pnBot{
-    -fx-border-color: #000000;
     -fx-border-width: 1 0 0 0;
-}
-
-#pnTop{
-    -fx-border-color: #000000;
-    -fx-border-width: 0 0 1 0;
 }
 
 #btnRemove,#btnFind,#btnAll,#btnUnRead,#btnReaded{
@@ -106,9 +97,65 @@
 
 #cbAll{
     -fx-background-color: #FFFFFF;
-
     -fx-color: #FFFFFF;
-
     -fx-radius: 0 0 0 0;
 }
 
+#mbPanelTop {
+    -fx-background-color: #FFFFFF;
+}
+
+#tpMain{
+    -fx-background-color: #FFFFFF;
+    -fx-effect: null;
+}
+
+#lbFullname{
+    -fx-text-fill: #FFFFFF;
+    -fx-font-weight: bold;
+}
+
+.tab-pane *.tab-header-background {
+    -fx-background-color: #FFFFFF;
+}
+
+#tabEmailMain{
+    -fx-background-image: url("../img/mainmail.png");
+    -fx-background-repeat: no-repeat;
+    -fx-border-color: black;
+    -fx-padding: 5 130;
+}
+
+#tabSocial{
+    -fx-background-image: url("../img/social.png");
+    -fx-background-repeat: no-repeat;
+    -fx-padding: 5 130;
+    -fx-border-color: black;
+}
+#tabOther{
+    -fx-background-image: url("../img/tag.png");
+    -fx-background-repeat: no-repeat;
+    -fx-padding: 5 130;
+    -fx-border-color: black;
+}
+
+.tab-pane:selected{
+    -fx-background-color: #FFFFFF;
+}
+
+.tab:hover {
+    -fx-color: -fx-hover-base;
+}
+.tab{
+    -fx-background-color:  #91EB81;
+}
+.tab:selected{
+    -fx-focus-color: 0;
+    -fx-background-color:white;
+    -fx-border-width: 1 1 0 1;
+}
+
+/* BAK */
+#tableMain{
+    -fx-background-color : transparent;
+}

@@ -14,7 +14,6 @@ import org.w3c.dom.html.HTMLTitleElement;
  */
 public class GmailLoginController {
     private OAuthCredential credential;
-    private UserInfo userInfo;
     private boolean addListener = true;
     private GmailLoginStage stage;
     private ConnectDB con;

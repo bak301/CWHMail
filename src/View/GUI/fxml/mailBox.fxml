@@ -14,7 +14,7 @@
 <?import javafx.scene.control.Label?>
 <?import java.net.URL?>
 
-<BorderPane fx:id="pnMainContent" maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="675.0" prefWidth="1200.0" xmlns="http://javafx.com/javafx/8" xmlns:fx="http://javafx.com/fxml/1" fx:controller="Controller.FolderButtonController">
+<BorderPane fx:id="pnMainContent" maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="675.0" prefWidth="1200.0" xmlns="http://javafx.com/javafx/8" xmlns:fx="http://javafx.com/fxml/1">
     <stylesheets>
         <URL value="@../css/panda.css" />
     </stylesheets>
@@ -30,7 +30,7 @@
             <Button fx:id="btnAddMail" layoutX="222.0" layoutY="11.0" maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" mnemonicParsing="false" prefHeight="30.0" prefWidth="124.0" text="       Viết email" />
             <Button fx:id="btnOption" layoutX="1095.0" layoutY="9.0" maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" mnemonicParsing="false" prefHeight="36.0" prefWidth="36.0" />
             <Button fx:id="btnListFriend" layoutX="1015.0" layoutY="10.0" maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" mnemonicParsing="false" prefHeight="33.0" prefWidth="40.0" />
-            <Label fx:id="lbFullname" layoutX="831.0" layoutY="12.0" prefHeight="27.0" prefWidth="165.0" />
+            <Label fx:id="lbFullname" layoutX="812.0" layoutY="12.0" prefHeight="30.0" prefWidth="197.0" />
          </children></Pane>
    </top>
    <left>
@@ -46,14 +46,50 @@
                   <Button fx:id="btnFind" layoutX="868.0" layoutY="12.0" mnemonicParsing="false" prefHeight="27.0" prefWidth="28.0" />
                </children>
             </Pane>
-            <Pane fx:id="pnTop" layoutX="21.0" layoutY="14.0" prefHeight="35.0" prefWidth="964.0">
+            <Pane fx:id="pnTop" layoutX="21.0" layoutY="14.0" prefHeight="35.0" prefWidth="955.0">
                <children>
                   <CheckBox fx:id="cbAll" layoutY="9.0" mnemonicParsing="false" />
-                  <Button fx:id="btnAll" layoutX="101.0" layoutY="5.0" mnemonicParsing="false" text="Tất Cả" />
-                  <Button fx:id="btnUnRead" layoutX="249.0" layoutY="5.0" mnemonicParsing="false" text="Chưa đọc" />
-                  <Button fx:id="btnReaded" layoutX="393.0" layoutY="5.0" mnemonicParsing="false" text="Đã đọc" />
+                  <Label layoutX="24.0" layoutY="10.0" prefHeight="15.0" prefWidth="194.0" text="Xem:" />
+                  <MenuButton fx:id="mbPanelTop" layoutX="60.0" layoutY="5.0" mnemonicParsing="false" text="Tất cả">
+                    <items>
+                      <MenuItem mnemonicParsing="false" text="Tất Cả" />
+                        <MenuItem mnemonicParsing="false" text="Chưa đọc" />
+                      <MenuItem mnemonicParsing="false" text="Đã đọc" />
+                    </items>
+                  </MenuButton>
                </children>
             </Pane>
+            <TabPane fx:id="tpMain" layoutX="20.0" layoutY="55.0" prefHeight="510.0" prefWidth="960.0" tabClosingPolicy="UNAVAILABLE">
+              <tabs>
+                <Tab id="tabEmailMain" text="Email chính">
+                  <content>
+                    <AnchorPane minHeight="0.0" minWidth="0.0" prefHeight="468.0" prefWidth="887.0">
+                           <children>
+                              <TableView id="tableMain" fx:id="tableMain" prefHeight="468.0" prefWidth="960.0" style="-fx-border-width: 0;">
+                                <columns>
+                                  <TableColumn fx:id="tick" prefWidth="38.0" text="tick" />
+                                  <TableColumn fx:id="name" prefWidth="199.0" text="fullname" />
+                                    <TableColumn fx:id="attachment" prefWidth="27.0" text="gim" />
+                                    <TableColumn fx:id="star" prefWidth="28.0" text="star" />
+                                    <TableColumn fx:id="content" prefWidth="537.0" text="titleAndContent" />
+                                    <TableColumn fx:id="date" prefWidth="130.0" text="dateMonth" />
+                                </columns>
+                              </TableView>
+                           </children></AnchorPane>
+                  </content>
+                </Tab>
+                <Tab id="tabSocial" text="Xã hội">
+                  <content>
+                    <AnchorPane minHeight="0.0" minWidth="0.0" prefHeight="180.0" prefWidth="200.0" />
+                  </content>
+                </Tab>
+                  <Tab id="tabOther" text="Khác">
+                    <content>
+                      <AnchorPane minHeight="0.0" minWidth="0.0" prefHeight="530.0" prefWidth="954.0" />
+                    </content>
+                  </Tab>
+              </tabs>
+            </TabPane>
          </children>
       </Pane>
    </center>
