@@ -1,12 +1,13 @@
 <?xml version="1.0" encoding="UTF-8"?>
 
+<?import java.lang.*?>
 <?import javafx.geometry.*?>
 <?import javafx.scene.image.*?>
 <?import java.net.*?>
 <?import javafx.scene.control.*?>
 <?import javafx.scene.layout.*?>
 
-<GridPane id="panelmain" maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="610.0" prefWidth="1035.0" xmlns="http://javafx.com/javafx/8" xmlns:fx="http://javafx.com/fxml/1" fx:controller="Controller.LoginController">
+<GridPane id="panelmain" maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="610.0" prefWidth="1035.0" xmlns="http://javafx.com/javafx/8" xmlns:fx="http://javafx.com/fxml/1" fx:controller="Controller.Login.LoginController">
     <stylesheets>
         <URL value="@../css/panda.css" />
     </stylesheets>
@@ -27,7 +28,7 @@
             <Image url="@../img/logoCWH.png" />
          </image>
          <GridPane.margin>
-            <Insets left="20.0" />
+            <Insets left="-3.0" />
          </GridPane.margin>
       </ImageView>
       <ImageView fitHeight="150.0" fitWidth="150.0" GridPane.columnIndex="1" GridPane.rowIndex="1">

@@ -1,6 +1,7 @@
-package Model;
+package Model.TableModel;
 
-import com.sun.mail.util.MimeUtil;
+import Controller.Utility.MessageParser;
+import javafx.beans.property.BooleanProperty;
 import javafx.beans.property.SimpleStringProperty;
 import javafx.beans.property.StringProperty;
 
@@ -8,9 +9,7 @@ import javax.mail.Message;
 import javax.mail.MessagingException;
 import javax.mail.internet.MimeUtility;
 import java.io.IOException;
-import java.nio.charset.Charset;
 import java.text.SimpleDateFormat;
-import java.util.Arrays;
 import java.util.Date;
 
 /**
@@ -20,13 +19,20 @@ public class MessageTableModel {
     private StringProperty from;
     private StringProperty content;
     private StringProperty date;
+    private BooleanProperty attachment;
+    private BooleanProperty starred;
 
     public MessageTableModel(Message m) {
         try {
-            System.out.println(m.getFrom()[0] + " : " + m.getContent() + " : " + m.getReceivedDate());
-            String[] tmp = m.getFrom()[0].toString().split(" ");
-            this.from = new SimpleStringProperty(tmp[tmp.length-1]);
-            this.content = new SimpleStringProperty(m.getSubject() + "     " + m.getContent());
+            String from = m.getFrom()[0].toString().split(" <")[0].replace("\"","");
+            this.from = new SimpleStringProperty((from.contains("=?")?MimeUtility.decodeWord(from):from));
+            String ct ="";
+            try {
+                ct = MessageParser.getStringContent(m).substring(0,50).trim().replace(System.lineSeparator()," ");
+            } catch (NullPointerException e){
+                ct = "";
+            }
+            this.content = new SimpleStringProperty(m.getSubject() + " SPLITTER  " + ct);
             this.date = new SimpleStringProperty(convertDate(m.getReceivedDate()));
         } catch (MessagingException | IOException e){
             e.printStackTrace();

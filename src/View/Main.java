@@ -1,7 +1,7 @@
 package View;
 
 import Controller.ConnectDB;
-import Controller.IMAPController;
+import Controller.Login.LoginController;
 import Controller.MailBoxController;
 import Model.OAuthCredential;
 import javafx.application.Application;
@@ -10,7 +10,6 @@ import javafx.scene.Parent;
 import javafx.scene.Scene;
 import javafx.stage.Stage;
 
-import javax.mail.MessagingException;
 import java.util.ArrayList;
 
 public class Main extends Application {
@@ -20,18 +19,26 @@ public class Main extends Application {
         primaryStage.setTitle("Welcome !");
         ConnectDB db = new ConnectDB();
         ArrayList<OAuthCredential> credentialsList = db.getCredentials();
-        db.close();
 
+        FXMLLoader loader;
         Parent root;
         if (credentialsList != null){// Prepare mail for mailBox
-            FXMLLoader fxmlLoader = new FXMLLoader(getClass().getResource("../View/GUI/fxml/mailBox.fxml"));
-            MailBoxController mailBoxController = new MailBoxController();
-            mailBoxController.setCredentialsList(credentialsList);
-            fxmlLoader.setController(mailBoxController);
-            root = fxmlLoader.load();
+            loader = new FXMLLoader(getClass().getResource("../View/GUI/fxml/mailBox.fxml"));
+
+            MailBoxController controller = new MailBoxController();
+            controller.setDb(db);
+            controller.setCredentialsList(credentialsList);
+
+            loader.setController(controller);
         } else {
-            root = FXMLLoader.load(getClass().getResource("../View/GUI/fxml/login.fxml"));
+            loader = new FXMLLoader(getClass().getResource("../View/GUI/fxml/login.fxml"));
+
+            LoginController controller = new LoginController();
+            controller.setDb(db);
+
+            loader.setController(controller);
         }
+        root = loader.load();
         primaryStage.setScene(new Scene(root));
         primaryStage.show();
     }

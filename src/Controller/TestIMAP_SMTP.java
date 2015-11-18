@@ -2,7 +2,6 @@ package Controller; /**
  * Created by vn130 on 11/6/2015.
  */
 
-import Model.GMailFolder;
 import Model.OAuthCredential;
 
 import javax.mail.*;
@@ -19,7 +18,7 @@ public class TestIMAP_SMTP {
         this.currentCredential = credential;
     }
 
-    private boolean connectSMTP() {
+    private void connectSMTP() {
         Properties props = new Properties();
         props.put("mail.smtp.auth", "true");
         props.put("mail.smtp.starttls.enable", "true");
@@ -39,10 +38,9 @@ public class TestIMAP_SMTP {
                 return new PasswordAuthentication(currentCredential.getUsername(), currentCredential.getAccess_token());
             }
         });
-        return session.getDebug();
     }
 
-    public boolean connectIMAP(){
+    public void connectIMAP(){
         Properties props = new Properties();
         props.put("mail.imap.auth", "true");
         props.put("mail.imap.starttls.enable", "true");
@@ -65,7 +63,6 @@ public class TestIMAP_SMTP {
         } catch (MessagingException e){
             e.printStackTrace();
         }
-        return session.getDebug();
     }
 
     public void sendTestMail(){

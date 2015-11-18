@@ -1,10 +1,13 @@
 package Controller;
 
+import Model.CustomLogger;
 import Model.OAuthCredential;
 import Model.UserInfo;
 
 import java.sql.*;
 import java.util.ArrayList;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 
 /**
  * Created by vn130 on 11/12/2015.
@@ -13,20 +16,22 @@ public class ConnectDB {
     private Connection con;
     private Statement stm;
     private PreparedStatement pstm;
+    private Logger logger;
 
     public ConnectDB(){
+        this.logger = new CustomLogger("Database").getLogger();
         connect();
         init();
     }
 
-    public void connect(){
+    private void connect(){
         try {
             Class.forName("org.sqlite.JDBC");
             con = DriverManager.getConnection("jdbc:sqlite:user.db");
         } catch (ClassNotFoundException | SQLException e){
             e.printStackTrace();
         }
-        System.out.println("Connected to user database !");
+        logger.log(Level.INFO, "Connected to user database !");
     }
 
     public void close(){
@@ -63,7 +68,7 @@ public class ConnectDB {
         } catch (SQLException e){
             e.printStackTrace();
         }
-        System.out.println("Table UserAuth init completed !");
+        logger.log(Level.INFO, "Table UserAuth init completed !");
     }
 
     public boolean addUserInfo(UserInfo userInfo){
@@ -81,7 +86,7 @@ public class ConnectDB {
 
             if (pstm.executeUpdate() != 0){
                 pstm.close();
-                System.out.println("Add new user info successfully !");
+                logger.log(Level.INFO, "Add new user info successfully !");
                 return true;
             }
         } catch (SQLException e){
@@ -97,7 +102,7 @@ public class ConnectDB {
             String getCredential = "SELECT * FROM USERINFO";
             ResultSet rs = stm.executeQuery(getCredential);
             if (!rs.next()){
-                System.out.println("No credentials found !");
+                logger.log(Level.SEVERE, "No credentials found !");
                 return null;
             } else {
                 do {
@@ -131,7 +136,7 @@ public class ConnectDB {
 
             if (pstm.executeUpdate() != 0){
                 pstm.close();
-                System.out.println("Add new credential successfully !");
+                logger.log(Level.SEVERE, "Add new credential successfully !");
                 return true;
             }
         } catch (SQLException e){
@@ -153,7 +158,7 @@ public class ConnectDB {
 
             if (pstm.executeUpdate() != 0){
                 pstm.close();
-                System.out.println("Updated new Access Token for current session !");
+                logger.log(Level.INFO, "Updated new Access Token for current session !");
                 return true;
             }
         } catch (SQLException e){
@@ -169,7 +174,7 @@ public class ConnectDB {
             String getCredential = "SELECT USERNAME, ACCESS_TOKEN, EXPIRE_TIME FROM UserAuth WHERE ACTIVE=1";
             ResultSet rs = stm.executeQuery(getCredential);
             if (!rs.next()){
-                System.out.println("No credentials found !");
+                logger.log(Level.SEVERE, "No credentials found !");
                 return null;
             } else {
                 do {

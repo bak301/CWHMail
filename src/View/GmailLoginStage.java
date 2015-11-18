@@ -1,7 +1,7 @@
 package View;
 
-import Controller.GmailLoginController;
-import Model.OAuthCredential;
+import Controller.Login.GmailLoginController;
+import Controller.Utility.OAuthUtility;
 import javafx.scene.Scene;
 import javafx.scene.control.Alert;
 import javafx.scene.control.ScrollPane;
@@ -30,13 +30,13 @@ public class GmailLoginStage extends Stage{
         this.show();
         controller.addListener();
         // Load the login page
-        engine.load(OAuthCredential.getAuthCode());
+        engine.load(OAuthUtility.GETAuthCode());
     }
 
     public void congratulation(){
         alert.setTitle("Congratulation !");
         alert.setHeaderText(null);
         alert.setContentText("You can access your Gmail account now !");
-        alert.showAndWait();
+        alert.show();
     }
 }

@@ -92,7 +92,12 @@
 .btnFolder {
     -fx-background-color: #BBFDC5;
     -fx-text-fill: #000000;
-    -fx-font-weight: bold;
+    -fx-font-size: 1.25em;
+    /*-fx-font-weight: bold;*/
+}
+
+.btnFolderSelected {
+    -fx-font-weight : bold;
 }
 
 #cbAll{

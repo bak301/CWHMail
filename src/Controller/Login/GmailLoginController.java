@@ -1,7 +1,8 @@
-package Controller;
+package Controller.Login;
 
+import Controller.ConnectDB;
+import Controller.Utility.OAuthUtility;
 import Model.OAuthCredential;
-import Model.UserInfo;
 import View.GmailLoginStage;
 import javafx.concurrent.Worker;
 import org.w3c.dom.events.EventTarget;
@@ -27,21 +28,19 @@ public class GmailLoginController {
         stage.engine.getLoadWorker().stateProperty().addListener((ov,oldState,newState) -> {
             // Check if the page is change to another
             if (newState == Worker.State.SUCCEEDED) {
-                System.out.println("new state");
-                if (addListener){
-                    addUsernameToCredential(credential);
-                    addListener = false;
-                }
+                addUsernameToCredential(addListener?credential:null);
+
                 //Check if this page is the server's response page
                 if (stage.engine.getLocation().contains("approval")) {
                     HTMLHeadElement head = (HTMLHeadElement) stage.engine.getDocument().getElementsByTagName("head").item(0);
                     HTMLTitleElement title = (HTMLTitleElement) head.getElementsByTagName("title").item(0);
 
                     credential.setAuthorization_code(title.getTextContent().split("=")[1]);
-                    con = new ConnectDB();
-                    if (credential.initCredentialandUserInfo()){
+                    if (OAuthUtility.createNewData(credential)){
+                        con = new ConnectDB();
                         con.addCredential(credential);
                         con.addUserInfo(credential.getUserInfo());
+                        con.close();
                     }
 
                     stage.close();
@@ -52,13 +51,19 @@ public class GmailLoginController {
     }
 
     public void addUsernameToCredential(OAuthCredential credential){
+        if (credential == null){
+            return;
+        }
+
         HTMLInputElement input = (HTMLInputElement) stage.engine.getDocument().getElementById("Email");
         EventTarget nextButton = (EventTarget) stage.engine.getDocument().getElementById("next");
         nextButton.addEventListener("click", e -> {
             String usrname = input.getValue();
             usrname += (!usrname.contains("@"))?"@gmail.com":"";
+
             credential.setUsername(usrname);
             credential.getUserInfo().setUsername(usrname);
         }, false);
+        addListener = false;
     }
 }
