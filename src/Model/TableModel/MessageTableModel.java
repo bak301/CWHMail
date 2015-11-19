@@ -28,7 +28,8 @@ public class MessageTableModel {
             this.from = new SimpleStringProperty((from.contains("=?")?MimeUtility.decodeWord(from):from));
             String ct;
             try {
-                ct = MessageUtility.getStringContent(m).substring(0,50).trim().replace(System.lineSeparator()," ");
+                String tmp = MessageUtility.getStringContent(m);
+                ct = tmp.substring(0,tmp.length()<50?tmp.length():50).trim().replace(System.lineSeparator()," ");
             } catch (NullPointerException e){
                 ct = "";
             }

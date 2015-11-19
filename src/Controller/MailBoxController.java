@@ -70,6 +70,7 @@ public class MailBoxController {
     private ArrayList<OAuthCredential> credentialsList;
     private Logger logger;
     private ArrayList<TableView<MessageTableModel>> tableList;
+    private ArrayList<ArrayList<Message>> classedMessageList;
     private IMAPController imapController;
     private ArrayList<Button> listBtn;
     private int layoutY;
@@ -81,10 +82,10 @@ public class MailBoxController {
         listBtn = new ArrayList<>();
         layoutY = 95;
 
-        setUsernameOnLabel();
-        addFolderListener(folderObservableList);
         initFolderList(folderObservableList);
         initTable();
+        addFolderListener(folderObservableList);
+        setUsernameOnLabel();
         addChoiceBoxListener();
     }
     // ----- END OF FXML CONTROLLER ----------
@@ -134,25 +135,21 @@ public class MailBoxController {
     }
 
     private void initTable(){
-        ArrayList<TableView<MessageTableModel>> tableList = new ArrayList<>();
+        tableList = new ArrayList<>();
         tableList.add(mainTable);
-        tableList.add(socialTable);
-        tableList.add(otherTable);
+//        tableList.add(socialTable);
+//        tableList.add(otherTable);
 
         for (TableView<MessageTableModel> t : tableList){
             t.widthProperty().addListener((source, oldWidth, newWidth) -> {
                 Pane header = (Pane) t.lookup("TableHeaderRow");
-                if (header.isVisible()){
-//                header.setMaxHeight(0);
-//                header.setMinHeight(0);
-//                header.setPrefHeight(0);
-                    header.setVisible(false);
-                }
+                header.setVisible(!header.isVisible());
             });
         }
     }
 
     private Button createFolderButton(Folder folder, int layoutY, ArrayList<Button> listBtn){
+        logger.info("Prepare to create button ....");
         Button btnFolder = new Button(folder.getName());
         btnFolder.getStyleClass().add("btnFolder");
         btnFolder.applyCss();
@@ -167,7 +164,26 @@ public class MailBoxController {
             }
             btnFolder.getStyleClass().add("btnFolderSelected");
 
-            new Thread(()->createMessageDataCell(folder)).start();
+            new Thread(new Task(){
+                @Override
+                protected Object call() throws Exception {
+                    try {
+                        if (!folder.isOpen()){
+                            folder.open(Folder.READ_WRITE);
+                        }
+                        logger.info("Prepare to get messages ...");
+                        classedMessageList = MessageUtility.getClassedMessageArray(folder.getMessages(), 5);
+                    } catch (MessagingException ex){
+                        ex.printStackTrace();
+                    }
+
+                    for (int i = 0; i < 3 ; i++){
+                        logger.info("Prepare to create message data cell");
+                        createMessageDataCell(tableList.get(i), classedMessageList.get(i));
+                    }
+                    return null;
+                }
+            }).start();
         });
         listBtn.add(btnFolder);
         return btnFolder;
@@ -185,34 +201,22 @@ public class MailBoxController {
         return box;
     }
 
-    private void createMessageDataCell(Folder f){
-        try {
-            if (!f.isOpen()){
-                f.open(Folder.READ_WRITE);
-                logger.info("Open folder " + f.getName());
-            }
 
-            logger.info("Prepare to get message list ...");
-            List<Message> list = Arrays.asList(f.getMessages());
-            List<MessageTableModel> mtmList = list.subList(0,list.size()<5?list.size():5).stream().map(MessageTableModel::new).collect(Collectors.toList());
-            ObservableList<MessageTableModel> messageObservableList = FXCollections.observableList(mtmList);
-            messageObservableList.addListener((ListChangeListener<MessageTableModel>) c -> {
-                mainTable.refresh();
-            });
 
-            new Thread(()->{
-                for (MessageTableModel m : mtmList){
-                    switch (MessageUtility.classSender(m.getFrom())){
-                        case 2:
-                            messageObservableList.add(m);
-                    }
-                }
-            }).start();
+    private void createMessageDataCell(TableView<MessageTableModel> table, ArrayList<Message> array ){
+        logger.info("Prepare to get message list ...");
+        ObservableList<MessageTableModel> messageObservableList = FXCollections.observableArrayList();
+        messageObservableList.addListener((ListChangeListener<MessageTableModel>) c -> {
+            table.refresh();
+        });
 
-            mainDate.setCellValueFactory(new PropertyValueFactory<>("date"));
-            mainName.setCellValueFactory(new PropertyValueFactory<>("from"));
-            mainContent.setCellValueFactory(new PropertyValueFactory<>("content"));
-            mainContent.setCellFactory(c -> new TableCell<MessageTableModel, String>(){
+        new Thread(()-> messageObservableList.addAll(array.stream().map(MessageTableModel::new).collect(Collectors.toList()))).start();
+
+        ObservableList<TableColumn<MessageTableModel,?>> colList = table.getColumns();
+        colList.get(5).setCellValueFactory(new PropertyValueFactory<>("date"));
+        colList.get(1).setCellValueFactory(new PropertyValueFactory<>("from"));
+        colList.get(4).setCellValueFactory(new PropertyValueFactory<>("content"));
+        ((TableColumn<MessageTableModel, String>)colList.get(4)).setCellFactory(c -> new TableCell<MessageTableModel, String>(){
                     @Override
                     protected void updateItem(String content, boolean empty){
                         super.updateItem(content, empty);
@@ -221,12 +225,9 @@ public class MailBoxController {
                         }
                     }
                 }
-            );
+        );
 
-            mainTable.setItems(messageObservableList);
-        } catch (MessagingException e){
-            e.printStackTrace();
-        }
+        table.setItems(messageObservableList);
     }
 
     public void setCredentialsList(ArrayList<OAuthCredential> credentialsList) {

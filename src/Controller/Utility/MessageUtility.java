@@ -1,6 +1,9 @@
 package Controller.Utility;
 
 import Model.CustomLogger;
+import Model.TableModel.MessageTableModel;
+import javafx.collections.FXCollections;
+import javafx.collections.ObservableList;
 
 import javax.mail.Message;
 import javax.mail.MessagingException;
@@ -47,5 +50,39 @@ public class MessageUtility {
 
     public static int classSender(String from){
         return from.equals("Facebook")?1:2;
+    }
+
+    public static ArrayList<ArrayList<Message>> getClassedMessageArray (Message[] messages, int max){
+        ArrayList<ArrayList<Message>> list = new ArrayList<>();
+        ArrayList<Message> main = new ArrayList<>();
+        ArrayList<Message> social = new ArrayList<>();
+        ArrayList<Message> other = new ArrayList<>();
+
+        List<Message> messageList = Arrays.asList(messages);
+        messageList = messageList.subList(0,messageList.size()<max?messageList.size():max);
+        Collections.reverse(messageList);
+
+        for (Message m : messageList){
+            String from = "";
+            try {
+                from = m.getFrom()[0].toString().split(" <")[0].replace("\"","");
+            } catch (MessagingException e){
+                e.printStackTrace();
+            }
+
+            if (from.contains("Facebook")){
+                social.add(m);
+            } else if (from.contains("Google")){
+                other.add(m);
+            } else {
+                main.add(m);
+            }
+        }
+
+        list.add(main);
+        list.add(social);
+        list.add(other);
+
+        return list;
     }
 }
