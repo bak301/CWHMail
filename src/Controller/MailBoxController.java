@@ -1,36 +1,34 @@
 package Controller;
 
+import Controller.Utility.MessageUtility;
+import Model.CustomLogger;
 import Model.TableModel.MessageTableModel;
 import Model.OAuthCredential;
 import com.sun.mail.imap.IMAPFolder;
-import com.sun.mail.imap.IMAPStore;
 import javafx.collections.FXCollections;
+import javafx.collections.ListChangeListener;
 import javafx.collections.ObservableList;
+import javafx.concurrent.Task;
+import javafx.concurrent.Worker;
 import javafx.fxml.FXML;
-import javafx.geometry.Pos;
 import javafx.scene.control.*;
 import javafx.scene.control.cell.PropertyValueFactory;
 import javafx.scene.layout.HBox;
 import javafx.scene.layout.Pane;
-import javafx.scene.web.WebEngine;
-import javafx.scene.web.WebView;
 
 import javax.mail.Folder;
 import javax.mail.Message;
 import javax.mail.MessagingException;
 import java.util.ArrayList;
 import java.util.Arrays;
-import java.util.Collections;
 import java.util.List;
+import java.util.logging.Logger;
 import java.util.stream.Collectors;
 
 /**
  * Created by vn130 on 11/16/2015.
  */
 public class MailBoxController {
-    private ConnectDB db;
-    private ArrayList<OAuthCredential> credentialsList;
-
     // ----------- FXML CONTROLLER ------------
     @FXML
     private MenuButton mbPanelTop;
@@ -42,13 +40,19 @@ public class MailBoxController {
     private Label lbFullname;
 
     @FXML
-    private TableView<MessageTableModel> tableMain;
+    private TableView<MessageTableModel> mainTable;
+
+    @FXML
+    private TableView<MessageTableModel> socialTable;
+
+    @FXML
+    private TableView<MessageTableModel> otherTable;
 
     @FXML
     private TableColumn tick;
 
     @FXML
-    private TableColumn<MessageTableModel, String> name;
+    private TableColumn<MessageTableModel, String> mainName;
 
     @FXML
     private TableColumn attachment;
@@ -57,57 +61,99 @@ public class MailBoxController {
     private TableColumn star;
 
     @FXML
-    private TableColumn<MessageTableModel, String> content;
+    private TableColumn<MessageTableModel, String> mainContent;
 
     @FXML
-    private TableColumn<MessageTableModel, String> date;
+    private TableColumn<MessageTableModel, String> mainDate;
+
+    private ConnectDB db;
+    private ArrayList<OAuthCredential> credentialsList;
+    private Logger logger;
+    private ArrayList<TableView<MessageTableModel>> tableList;
+    private IMAPController imapController;
+    private ArrayList<Button> listBtn;
+    private int layoutY;
 
     @FXML
     public void initialize(){
-        IMAPController imapController = new IMAPController(credentialsList, db);
-        lbFullname.setText(credentialsList.get(0).getUserInfo().getName());
-        lbFullname.setVisible(true);
+        ObservableList<IMAPFolder> folderObservableList = FXCollections.observableArrayList();
+        logger = new CustomLogger("Mail Box").getLogger();
+        listBtn = new ArrayList<>();
+        layoutY = 95;
 
-        for (IMAPStore store : imapController.getStoreList()){
-            ArrayList<IMAPFolder> folderList = imapController.getFolderList(store);
-            for (IMAPFolder folder : folderList){
-                createMessageDataCell(folder.getName().equals("INBOX")?folder:null);
-            }
-            createFolderMenu(folderList);
-        }
+        setUsernameOnLabel();
+        addFolderListener(folderObservableList);
+        initFolderList(folderObservableList);
+        initTable();
+        addChoiceBoxListener();
+    }
+    // ----- END OF FXML CONTROLLER ----------
 
-
-        tableMain.widthProperty().addListener((source, oldWidth, newWidth) -> {
-            Pane header = (Pane) tableMain.lookup("TableHeaderRow");
-            if (header.isVisible()){
-//                header.setMaxHeight(0);
-//                header.setMinHeight(0);
-//                header.setPrefHeight(0);
-                header.setVisible(false);
-            }
-        });
-
+    private void addChoiceBoxListener(){
         for (MenuItem mi : mbPanelTop.getItems()){
             mi.setOnAction(e->{
                 mbPanelTop.setText(mi.getText());
             });
         }
     }
-    // ----- END OF FXML CONTROLLER ----------
 
-    private void createFolderMenu(List<IMAPFolder> folderList){
-        int layoutY = 95;
+    private void setUsernameOnLabel(){
+        lbFullname.setText(credentialsList.get(0).getUserInfo().getName());
+        lbFullname.setVisible(true);
+    }
 
-        ArrayList<Button> listBtn = new ArrayList<>();
-        for (Folder f : folderList){
-            Button btnFolder = createFolderButton(f.getName(), layoutY, listBtn);
-            layoutY+=25;
-            pnLeftColumn.getChildren().add(btnFolder);
+    private void addFolderListener(ObservableList<IMAPFolder> folderObservableList){
+        folderObservableList.addListener((ListChangeListener<IMAPFolder>) c -> {
+            Folder f = folderObservableList.get(folderObservableList.size()-1);
+            logger.info("Folder " + f.getName() + " added !");
+            pnLeftColumn.getChildren().add(createFolderButton(f, layoutY, listBtn));
+            layoutY+= 25;
+            pnLeftColumn.requestLayout();
+        });
+
+    }
+
+    private void initFolderList(ObservableList<IMAPFolder> folderObservableList){
+        Task task = new Task() {
+            @Override
+            protected Object call() throws Exception {
+                imapController = new IMAPController(credentialsList, db);
+                return null;
+            }
+        };
+
+        task.stateProperty().addListener((ov,old,newState)->{
+            if (newState == Worker.State.SUCCEEDED){
+                for (IMAPFolder f : imapController.getFolderList(imapController.getStoreList().get(0))){
+                    folderObservableList.add(f);
+                }
+            }
+        });
+
+        new Thread(task).start();
+    }
+
+    private void initTable(){
+        ArrayList<TableView<MessageTableModel>> tableList = new ArrayList<>();
+        tableList.add(mainTable);
+        tableList.add(socialTable);
+        tableList.add(otherTable);
+
+        for (TableView<MessageTableModel> t : tableList){
+            t.widthProperty().addListener((source, oldWidth, newWidth) -> {
+                Pane header = (Pane) t.lookup("TableHeaderRow");
+                if (header.isVisible()){
+//                header.setMaxHeight(0);
+//                header.setMinHeight(0);
+//                header.setPrefHeight(0);
+                    header.setVisible(false);
+                }
+            });
         }
     }
 
-    private Button createFolderButton(String name, int layoutY, ArrayList<Button> listBtn){
-        Button btnFolder = new Button(name);
+    private Button createFolderButton(Folder folder, int layoutY, ArrayList<Button> listBtn){
+        Button btnFolder = new Button(folder.getName());
         btnFolder.getStyleClass().add("btnFolder");
         btnFolder.applyCss();
 
@@ -120,6 +166,8 @@ public class MailBoxController {
                 b.getStyleClass().removeIf(c->c.equals("btnFolderSelected"));
             }
             btnFolder.getStyleClass().add("btnFolderSelected");
+
+            new Thread(()->createMessageDataCell(folder)).start();
         });
         listBtn.add(btnFolder);
         return btnFolder;
@@ -127,11 +175,7 @@ public class MailBoxController {
 
     private HBox createMailPreview(String content){
         String[] splittedContent = content.split("SPLITTER");
-//        WebView view = new WebView();
-//        view.setMaxHeight(35);
-//        WebEngine engine = view.getEngine();
-//        engine.loadContent(content);
-//        return view;
+
         HBox box = new HBox();
         Label subject = new Label(splittedContent[0]);
         subject.setStyle("-fx-font-weight : bold;");
@@ -142,33 +186,44 @@ public class MailBoxController {
     }
 
     private void createMessageDataCell(Folder f){
-        if (f == null){
-            return;
-        }
-
         try {
-            f.open(Folder.READ_WRITE);
-            List<Message> last10 = Arrays.asList(f.getMessages());
-            Collections.reverse(last10);
-            ArrayList<MessageTableModel> modelArrayList = last10.subList(0, 20).stream().map(MessageTableModel::new).collect(Collectors.toCollection(ArrayList::new));
-            ObservableList<MessageTableModel> messageObservableList = FXCollections.observableList(modelArrayList);
+            if (!f.isOpen()){
+                f.open(Folder.READ_WRITE);
+                logger.info("Open folder " + f.getName());
+            }
 
-            name.setCellValueFactory(new PropertyValueFactory<MessageTableModel,String>("from"));
-            content.setCellValueFactory(new PropertyValueFactory<MessageTableModel,String>("content"));
-            content.setCellFactory(c -> new TableCell<MessageTableModel, String>(){
+            logger.info("Prepare to get message list ...");
+            List<Message> list = Arrays.asList(f.getMessages());
+            List<MessageTableModel> mtmList = list.subList(0,list.size()<5?list.size():5).stream().map(MessageTableModel::new).collect(Collectors.toList());
+            ObservableList<MessageTableModel> messageObservableList = FXCollections.observableList(mtmList);
+            messageObservableList.addListener((ListChangeListener<MessageTableModel>) c -> {
+                mainTable.refresh();
+            });
+
+            new Thread(()->{
+                for (MessageTableModel m : mtmList){
+                    switch (MessageUtility.classSender(m.getFrom())){
+                        case 2:
+                            messageObservableList.add(m);
+                    }
+                }
+            }).start();
+
+            mainDate.setCellValueFactory(new PropertyValueFactory<>("date"));
+            mainName.setCellValueFactory(new PropertyValueFactory<>("from"));
+            mainContent.setCellValueFactory(new PropertyValueFactory<>("content"));
+            mainContent.setCellFactory(c -> new TableCell<MessageTableModel, String>(){
                     @Override
                     protected void updateItem(String content, boolean empty){
                         super.updateItem(content, empty);
                         if (!empty){
                             setGraphic(createMailPreview(content));
-//                            setMaxHeight(30);
                         }
                     }
                 }
             );
-            date.setCellValueFactory(new PropertyValueFactory<MessageTableModel,String>("date"));
 
-            tableMain.setItems(messageObservableList);
+            mainTable.setItems(messageObservableList);
         } catch (MessagingException e){
             e.printStackTrace();
         }

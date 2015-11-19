@@ -1,6 +1,6 @@
 package Model.TableModel;
 
-import Controller.Utility.MessageParser;
+import Controller.Utility.MessageUtility;
 import javafx.beans.property.BooleanProperty;
 import javafx.beans.property.SimpleStringProperty;
 import javafx.beans.property.StringProperty;
@@ -26,9 +26,9 @@ public class MessageTableModel {
         try {
             String from = m.getFrom()[0].toString().split(" <")[0].replace("\"","");
             this.from = new SimpleStringProperty((from.contains("=?")?MimeUtility.decodeWord(from):from));
-            String ct ="";
+            String ct;
             try {
-                ct = MessageParser.getStringContent(m).substring(0,50).trim().replace(System.lineSeparator()," ");
+                ct = MessageUtility.getStringContent(m).substring(0,50).trim().replace(System.lineSeparator()," ");
             } catch (NullPointerException e){
                 ct = "";
             }

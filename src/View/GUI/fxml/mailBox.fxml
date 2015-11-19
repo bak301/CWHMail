@@ -65,14 +65,14 @@
                   <content>
                     <AnchorPane minHeight="0.0" minWidth="0.0" prefHeight="468.0" prefWidth="887.0">
                            <children>
-                              <TableView id="tableMain" fx:id="tableMain" prefHeight="468.0" prefWidth="960.0" style="-fx-border-width: 0;">
+                              <TableView id="tableMain" fx:id="mainTable" prefHeight="468.0" prefWidth="960.0" style="-fx-border-width: 0;">
                                 <columns>
                                   <TableColumn fx:id="tick" prefWidth="38.0" text="tick" />
-                                  <TableColumn fx:id="name" prefWidth="199.0" text="fullname" />
+                                  <TableColumn fx:id="mainName" prefWidth="199.0" text="fullname" />
                                     <TableColumn fx:id="attachment" prefWidth="27.0" text="gim" />
                                     <TableColumn fx:id="star" prefWidth="28.0" text="star" />
-                                    <TableColumn fx:id="content" prefWidth="537.0" text="titleAndContent" />
-                                    <TableColumn fx:id="date" prefWidth="130.0" text="dateMonth" />
+                                    <TableColumn fx:id="mainContent" prefWidth="537.0" text="titleAndContent" />
+                                    <TableColumn fx:id="mainDate" prefWidth="130.0" text="dateMonth" />
                                 </columns>
                               </TableView>
                            </children></AnchorPane>

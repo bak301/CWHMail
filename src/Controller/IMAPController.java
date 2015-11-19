@@ -55,7 +55,12 @@ public class IMAPController {
         logger.log(Level.INFO, "---- There are " + credentialList.size() + " credentials available !");
 
         for (OAuthCredential credential : credentialList){
-            storeList.add(getStore(credential));
+            IMAPStore st = null;
+            do {
+                st = getStore(credential);
+            } while (st == null);
+
+            storeList.add(st);
             // Assign user info to credential
             for (UserInfo userInfo : userInfoList){
                 if (credential.getUsername().equals(userInfo.getUsername())){
@@ -88,7 +93,7 @@ public class IMAPController {
         }
 
         //Reconnect
-        return getStore(credential);
+        return null;
     }
 
     public ArrayList<IMAPStore> getStoreList(){

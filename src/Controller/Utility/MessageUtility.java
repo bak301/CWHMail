@@ -1,14 +1,22 @@
 package Controller.Utility;
 
+import Model.CustomLogger;
+
+import javax.mail.Message;
 import javax.mail.MessagingException;
 import javax.mail.Multipart;
 import javax.mail.Part;
 import java.io.IOException;
+import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.Collections;
+import java.util.List;
+import java.util.logging.Logger;
 
 /**
  * Created by vn130 on 11/17/2015.
  */
-public class MessageParser {
+public class MessageUtility {
     public static String getStringContent(Part p) throws IOException, MessagingException{
         if (p.isMimeType("text/plain")) {
 //            System.out.println("This is plain text");
@@ -35,5 +43,9 @@ public class MessageParser {
             return getStringContent((Part) p.getContent());
         }
         return null;
+    }
+
+    public static int classSender(String from){
+        return from.equals("Facebook")?1:2;
     }
 }

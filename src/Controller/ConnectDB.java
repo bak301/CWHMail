@@ -71,6 +71,7 @@ public class ConnectDB {
         logger.log(Level.INFO, "Table UserAuth init completed !");
     }
 
+    // ---------------------------- TABLE USERINFO ---------------------------------------
     public boolean addUserInfo(UserInfo userInfo){
         try {
             String addCredential = "INSERT INTO USERINFO (GOOGLEID,NAME,LINK,PICTURE,GENDER,LOCALE,USERNAME)" +
@@ -123,6 +124,8 @@ public class ConnectDB {
         }
         return userInfoList;
     }
+
+    // ---------------------------------- TABLE CREDENTIALS ------------------------------------
 
     public boolean addCredential(OAuthCredential credential){
         try {
@@ -206,4 +209,6 @@ public class ConnectDB {
         }
         return refresh_token;
     }
+
+    //----------------------------------------- TABLE USERMESSAGES --------------------------------
 }
