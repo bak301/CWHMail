@@ -69,7 +69,6 @@ public class IMAPController {
             }
         }
         db.close();
-
         logger.log(Level.INFO, "Successfully connect all credentials to IMAP server !!");
     }
 
@@ -91,8 +90,6 @@ public class IMAPController {
             OAuthUtility.createNewData(credential);
             db.updateCredential(credential);
         }
-
-        //Reconnect
         return null;
     }
 

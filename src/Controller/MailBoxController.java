@@ -21,6 +21,7 @@ import javax.mail.Message;
 import javax.mail.MessagingException;
 import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.LinkedList;
 import java.util.List;
 import java.util.logging.Logger;
 import java.util.stream.Collectors;
@@ -70,7 +71,7 @@ public class MailBoxController {
     private ArrayList<OAuthCredential> credentialsList;
     private Logger logger;
     private ArrayList<TableView<MessageTableModel>> tableList;
-    private ArrayList<ArrayList<Message>> classedMessageList;
+    private ArrayList<LinkedList<Message>> classedMessageList;
     private IMAPController imapController;
     private ArrayList<Button> listBtn;
     private int layoutY;
@@ -141,6 +142,14 @@ public class MailBoxController {
 //        tableList.add(otherTable);
 
         for (TableView<MessageTableModel> t : tableList){
+//            t.setRowFactory(table -> {
+//                final TableRow<MessageTableModel> row = new TableRow<>();
+//                row.hoverProperty().addListener(o->{
+//                    if (row.isHover()){
+//                        row.getStyleClass().
+//                    }
+//                });
+//            });
             t.widthProperty().addListener((source, oldWidth, newWidth) -> {
                 Pane header = (Pane) t.lookup("TableHeaderRow");
                 header.setVisible(!header.isVisible());
@@ -202,8 +211,7 @@ public class MailBoxController {
     }
 
 
-
-    private void createMessageDataCell(TableView<MessageTableModel> table, ArrayList<Message> array ){
+    private void createMessageDataCell(TableView<MessageTableModel> table, LinkedList<Message> array ){
         logger.info("Prepare to get message list ...");
         ObservableList<MessageTableModel> messageObservableList = FXCollections.observableArrayList();
         messageObservableList.addListener((ListChangeListener<MessageTableModel>) c -> {
@@ -212,10 +220,12 @@ public class MailBoxController {
 
         new Thread(()-> messageObservableList.addAll(array.stream().map(MessageTableModel::new).collect(Collectors.toList()))).start();
 
+        table.setItems(messageObservableList);
         ObservableList<TableColumn<MessageTableModel,?>> colList = table.getColumns();
         colList.get(5).setCellValueFactory(new PropertyValueFactory<>("date"));
         colList.get(1).setCellValueFactory(new PropertyValueFactory<>("from"));
         colList.get(4).setCellValueFactory(new PropertyValueFactory<>("content"));
+
         ((TableColumn<MessageTableModel, String>)colList.get(4)).setCellFactory(c -> new TableCell<MessageTableModel, String>(){
                     @Override
                     protected void updateItem(String content, boolean empty){
@@ -226,8 +236,6 @@ public class MailBoxController {
                     }
                 }
         );
-
-        table.setItems(messageObservableList);
     }
 
     public void setCredentialsList(ArrayList<OAuthCredential> credentialsList) {

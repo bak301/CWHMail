@@ -1,20 +1,11 @@
 package Controller.Utility;
 
-import Model.CustomLogger;
-import Model.TableModel.MessageTableModel;
-import javafx.collections.FXCollections;
-import javafx.collections.ObservableList;
-
 import javax.mail.Message;
 import javax.mail.MessagingException;
 import javax.mail.Multipart;
 import javax.mail.Part;
 import java.io.IOException;
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.Collections;
-import java.util.List;
-import java.util.logging.Logger;
+import java.util.*;
 
 /**
  * Created by vn130 on 11/17/2015.
@@ -52,11 +43,11 @@ public class MessageUtility {
         return from.equals("Facebook")?1:2;
     }
 
-    public static ArrayList<ArrayList<Message>> getClassedMessageArray (Message[] messages, int max){
-        ArrayList<ArrayList<Message>> list = new ArrayList<>();
-        ArrayList<Message> main = new ArrayList<>();
-        ArrayList<Message> social = new ArrayList<>();
-        ArrayList<Message> other = new ArrayList<>();
+    public static ArrayList<LinkedList<Message>> getClassedMessageArray (Message[] messages, int max){
+        ArrayList<LinkedList<Message>> list = new ArrayList<>();
+        LinkedList<Message> main = new LinkedList<>();
+        LinkedList<Message> social = new LinkedList<>();
+        LinkedList<Message> other = new LinkedList<>();
 
         List<Message> messageList = Arrays.asList(messages);
         messageList = messageList.subList(0,messageList.size()<max?messageList.size():max);

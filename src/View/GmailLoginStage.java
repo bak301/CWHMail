@@ -15,11 +15,11 @@ import javafx.stage.Stage;
 public class GmailLoginStage extends Stage{
     private WebView view = new WebView();
     public WebEngine engine = view.getEngine();
-    private ScrollPane panel = new ScrollPane();
     GmailLoginController controller = new GmailLoginController(this);
     public Alert alert;
 
     public GmailLoginStage() {
+        ScrollPane panel = new ScrollPane();
         panel.setContent(view);
         this.setResizable(true);
         this.setScene(new Scene(panel));

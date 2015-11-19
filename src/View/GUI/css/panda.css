@@ -164,3 +164,16 @@
 #tableMain{
     -fx-background-color : transparent;
 }
+
+/* Row hovered */
+.table-row-cell:hover {
+    -fx-background-color: #98fb98;
+    -fx-background-insets: 0, 0 0 1 0;
+    -fx-text-fill: white;
+}
+
+.table-row-cell:focused:selected {
+    -fx-background-color: #00B16A;
+    -fx-background-insets: 0, 0 0 1 0;
+    -fx-text-fill: white;
+}
