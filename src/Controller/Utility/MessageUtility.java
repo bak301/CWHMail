@@ -50,8 +50,8 @@ public class MessageUtility {
         LinkedList<Message> other = new LinkedList<>();
 
         List<Message> messageList = Arrays.asList(messages);
-        messageList = messageList.subList(0,messageList.size()<max?messageList.size():max);
         Collections.reverse(messageList);
+        messageList = messageList.subList(0,messageList.size()<=max?messageList.size():max);
 
         for (Message m : messageList){
             String from = "";
