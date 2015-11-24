@@ -33,7 +33,7 @@ public class MessageTableModel {
             this.from = new SimpleStringProperty((from.contains("=?")?MimeUtility.decodeWord(from):from));
             String ct;
             try {
-                String tmp = MessageUtility.getStringContent(m);
+                String tmp = MessageUtility.getTextContent(m);
                 ct = tmp.substring(0,tmp.length()<50?tmp.length():50).trim().replace(System.lineSeparator()," ");
             } catch (NullPointerException e){
                 ct = "";

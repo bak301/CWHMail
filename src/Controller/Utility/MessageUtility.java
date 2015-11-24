@@ -1,5 +1,8 @@
 package Controller.Utility;
 
+import com.sun.mail.imap.IMAPMessage;
+import com.sun.xml.internal.org.jvnet.mimepull.MIMEMessage;
+
 import javax.mail.Message;
 import javax.mail.MessagingException;
 import javax.mail.Multipart;
@@ -11,7 +14,7 @@ import java.util.*;
  * Created by vn130 on 11/17/2015.
  */
 public class MessageUtility {
-    public static String getStringContent(Part p) throws IOException, MessagingException{
+    public static String getTextContent(Part p) throws IOException, MessagingException{
         if (p.isMimeType("text/plain")) {
             return (String) p.getContent();
         }
@@ -22,15 +25,37 @@ public class MessageUtility {
 
             String sum = "";
             for (int i = 0; i < count; i++) {
-                sum += getStringContent(mp.getBodyPart(i));
+                sum += getTextContent(mp.getBodyPart(i));
             }
             return sum;
         }
         //check if the content is a nested message
         else if (p.isMimeType("message/rfc822")) {
-            return getStringContent((Part) p.getContent());
+            return getTextContent((Part) p.getContent());
         }
-        return "< -- Blocked content -- >";
+        return "";
+    }
+
+    public static String getHTMLContent(Part p) throws IOException, MessagingException{
+        if (p.isMimeType("text/HTML")) {
+            return (String) p.getContent();
+        }
+        //check if the content has attachment
+        else if (p.isMimeType("multipart/*")) {
+            Multipart mp = (Multipart) p.getContent();
+            int count = mp.getCount();
+
+            String sum = "";
+            for (int i = 0; i < count; i++) {
+                sum += getHTMLContent(mp.getBodyPart(i));
+            }
+            return sum;
+        }
+        //check if the content is a nested message
+        else if (p.isMimeType("message/rfc822")) {
+            return getHTMLContent((Part) p.getContent());
+        }
+        return p.getContentType();
     }
 
     public static ArrayList<LinkedList<Message>> getClassedMessageArray (Message[] messages){

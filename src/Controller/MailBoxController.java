@@ -290,7 +290,7 @@ public class MailBoxController {
     private void sortBySentDate(LinkedList<Message> mList){
         mList.sort((o1, o2) -> {
             try {
-                return o1.getSentDate().compareTo(o2.getSentDate());
+                return -(o1.getSentDate().compareTo(o2.getSentDate()));
             } catch (MessagingException e){
                 return 0;
             }
