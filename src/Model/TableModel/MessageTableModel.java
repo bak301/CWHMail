@@ -2,9 +2,11 @@ package Model.TableModel;
 
 import Controller.Utility.MessageUtility;
 import javafx.beans.property.BooleanProperty;
+import javafx.beans.property.SimpleBooleanProperty;
 import javafx.beans.property.SimpleStringProperty;
 import javafx.beans.property.StringProperty;
 
+import javax.mail.Flags;
 import javax.mail.Message;
 import javax.mail.MessagingException;
 import javax.mail.internet.MimeUtility;
@@ -16,14 +18,17 @@ import java.util.Date;
  * Created by vn130 on 11/17/2015.
  */
 public class MessageTableModel {
+    private Message message;
     private StringProperty from;
     private StringProperty content;
     private StringProperty date;
     private BooleanProperty attachment;
     private BooleanProperty starred;
+    private BooleanProperty isRead;
 
     public MessageTableModel(Message m) {
         try {
+            this.message = m;
             String from = m.getFrom()[0].toString().split(" <")[0].replace("\"","");
             this.from = new SimpleStringProperty((from.contains("=?")?MimeUtility.decodeWord(from):from));
             String ct;
@@ -35,6 +40,7 @@ public class MessageTableModel {
             }
             this.content = new SimpleStringProperty(m.getSubject() + " SPLITTER  " + ct);
             this.date = new SimpleStringProperty(convertDate(m.getReceivedDate()));
+            this.isRead = new SimpleBooleanProperty(m.isSet(Flags.Flag.SEEN));
         } catch (MessagingException | IOException e){
             e.printStackTrace();
         }
@@ -67,5 +73,9 @@ public class MessageTableModel {
 
     public StringProperty dateProperty() {
         return date;
+    }
+
+    public Message getMessage() {
+        return message;
     }
 }

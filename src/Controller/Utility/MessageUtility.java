@@ -13,14 +13,10 @@ import java.util.*;
 public class MessageUtility {
     public static String getStringContent(Part p) throws IOException, MessagingException{
         if (p.isMimeType("text/plain")) {
-//            System.out.println("This is plain text");
-//            System.out.println("---------------------------");
             return (String) p.getContent();
         }
         //check if the content has attachment
         else if (p.isMimeType("multipart/*")) {
-//            System.out.println("This is a Multipart");
-//            System.out.println("---------------------------");
             Multipart mp = (Multipart) p.getContent();
             int count = mp.getCount();
 
@@ -32,28 +28,18 @@ public class MessageUtility {
         }
         //check if the content is a nested message
         else if (p.isMimeType("message/rfc822")) {
-//            System.out.println("This is a Nested Message");
-//            System.out.println("---------------------------");
             return getStringContent((Part) p.getContent());
         }
-        return null;
+        return "< -- Blocked content -- >";
     }
 
-    public static int classSender(String from){
-        return from.equals("Facebook")?1:2;
-    }
-
-    public static ArrayList<LinkedList<Message>> getClassedMessageArray (Message[] messages, int max){
+    public static ArrayList<LinkedList<Message>> getClassedMessageArray (Message[] messages){
         ArrayList<LinkedList<Message>> list = new ArrayList<>();
         LinkedList<Message> main = new LinkedList<>();
         LinkedList<Message> social = new LinkedList<>();
         LinkedList<Message> other = new LinkedList<>();
 
-        List<Message> messageList = Arrays.asList(messages);
-        Collections.reverse(messageList);
-        messageList = messageList.subList(0,messageList.size()<=max?messageList.size():max);
-
-        for (Message m : messageList){
+        for (Message m : messages){
             String from = "";
             try {
                 from = m.getFrom()[0].toString().split(" <")[0].replace("\"","");
@@ -62,11 +48,11 @@ public class MessageUtility {
             }
 
             if (from.contains("Facebook")){
-                social.add(m);
+                social.add(0,m);
             } else if (from.contains("Google")){
-                other.add(m);
+                other.add(0,m);
             } else {
-                main.add(m);
+                main.add(0,m);
             }
         }
 

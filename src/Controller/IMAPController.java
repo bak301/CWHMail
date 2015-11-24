@@ -7,6 +7,9 @@ import Model.UserInfo;
 import com.sun.mail.imap.IMAPFolder;
 import com.sun.mail.imap.IMAPStore;
 import com.sun.mail.util.MailConnectException;
+import javafx.concurrent.Task;
+import javafx.concurrent.WorkerStateEvent;
+import javafx.event.EventHandler;
 
 import javax.mail.*;
 import java.util.*;
@@ -81,7 +84,7 @@ public class IMAPController {
             logger.log(Level.INFO, "Connect " + credential.getUsername() + " to IMAP store successfully!");
             return store;
         } catch (MailConnectException e){
-            logger.log(Level.INFO, "Time out ! Attempt to reconnect ...");
+            logger.info("Timeout ! Attempt to reconnect ...");
         } catch (MessagingException e){
             logger.log(Level.INFO, "Access Token is expired ! Attempt to refresh it ....");
 

@@ -11,17 +11,22 @@ import javafx.collections.ObservableList;
 import javafx.concurrent.Task;
 import javafx.concurrent.Worker;
 import javafx.fxml.FXML;
+import javafx.fxml.FXMLLoader;
 import javafx.scene.Node;
+import javafx.scene.Parent;
+import javafx.scene.Scene;
 import javafx.scene.control.*;
 import javafx.scene.control.cell.PropertyValueFactory;
 import javafx.scene.layout.HBox;
 import javafx.scene.layout.Pane;
+import javafx.stage.Stage;
 
 import javax.mail.Folder;
 import javax.mail.Message;
 import javax.mail.MessagingException;
 import javax.mail.event.MessageCountAdapter;
 import javax.mail.event.MessageCountEvent;
+import java.io.IOException;
 import java.util.ArrayList;
 import java.util.LinkedList;
 import java.util.logging.Logger;
@@ -84,49 +89,10 @@ public class MailBoxController {
         initFolderList(folderObservableList);
         initTable();
         addListenerToFolderList(folderObservableList);
-        lbFullname.setText(credentialsList.get(0).getUserInfo().getName());
+
         mbPanelTop.getItems().forEach(i->i.setOnAction(e->mbPanelTop.setText(i.getText())));
     }
     // ----- END OF FXML CONTROLLER ----------
-
-    private void addListenerToFolderList(ObservableList<IMAPFolder> folderObservableList){
-        folderObservableList.addListener((ListChangeListener<IMAPFolder>) c -> {
-            while (c.next()){
-                if (c.wasAdded()){
-                    c.getAddedSubList().forEach(this::initFolder);
-                    pnLeftColumn.requestLayout();
-                } else if (c.wasRemoved()){
-                    c.getRemoved().forEach(f->listBtn.removeIf(b->b.getText().equals(f.getName())));
-                }
-            }
-        });
-
-    }
-
-    private void initFolder(Folder folder){
-        folder.addMessageCountListener(new MessageCountAdapter() {
-            @Override
-            public void messagesAdded(MessageCountEvent e) {
-                ArrayList<LinkedList<Message>> newMessages = MessageUtility.getClassedMessageArray(e.getMessages(), e.getMessages().length);
-                for (int i = 0; i < 3 ; i++){
-                    logger.info("Prepare to add message data cell ...");
-                    updateMessageDataCell(tableList.get(i), newMessages.get(i), true);
-                }
-            }
-
-            @Override
-            public void messagesRemoved(MessageCountEvent e) {
-                ArrayList<LinkedList<Message>> newMessages = MessageUtility.getClassedMessageArray(e.getMessages(), e.getMessages().length);
-                for (int i = 0; i < 3; i++){
-                    logger.info("Prepare to delete message data cell ...");
-                    updateMessageDataCell(tableList.get(i), newMessages.get(i), false);
-                }
-            }
-        });
-
-        logger.info("Folder " + folder.getName() + " added !");
-        pnLeftColumn.getChildren().add(createFolderButton(folder));
-    }
 
     private void initFolderList(ObservableList<IMAPFolder> folderObservableList){
         Task task = new Task() {
@@ -140,11 +106,14 @@ public class MailBoxController {
         task.stateProperty().addListener((ov,old,newState)->{
             if (newState == Worker.State.SUCCEEDED){
                 folderObservableList.addAll(imapController.getFolderList(imapController.getStoreList().get(0)).stream().collect(Collectors.toList()));
+                lbFullname.setText(credentialsList.get(0).getUserInfo().getName());
             }
         });
 
         new Thread(task).start();
     }
+
+    // -------------------------- TABLE ------------------------------
 
     private void initTable(){
         tableList = new ArrayList<>();
@@ -157,10 +126,70 @@ public class MailBoxController {
                 Node header = t.lookup("TableHeaderRow");
                 header.setVisible(!header.isVisible());
             });
+
+            t.setRowFactory(param -> {
+                final TableRow<MessageTableModel> row = new TableRow<MessageTableModel>();
+                row.setOnMouseClicked(event -> {
+                    Message m = param.getItems().get(param.getSelectionModel().getSelectedIndex()).getMessage();
+                    ReaderController controller = new ReaderController();
+                    controller.setMessage(m);
+
+                    FXMLLoader loader = new FXMLLoader(getClass().getResource("../View/GUI/fxml/reader.fxml"));
+                    loader.setController(controller);
+                    Stage stage = new Stage();
+                    try {
+                        Parent root = loader.load();
+                        stage.setScene(new Scene(root));
+                    } catch (IOException e){
+                        e.printStackTrace();
+                    }
+                    stage.show();
+                });
+                return row;
+            });
         }
     }
 
-    private Button createFolderButton(Folder folder){
+    private void addListenerToFolderList(ObservableList<IMAPFolder> folderObservableList){
+        folderObservableList.addListener((ListChangeListener<IMAPFolder>) c -> {
+            while (c.next()){
+                if (c.wasAdded()){
+                    c.getAddedSubList().forEach(MailBoxController.this::initFolder);
+                } else if (c.wasRemoved()){
+                    c.getRemoved().forEach(f->listBtn.removeIf(b->b.getText().equals(f.getName())));
+                }
+                pnLeftColumn.requestLayout();
+            }
+        });
+
+    }
+
+    private void initFolder(IMAPFolder folder){
+        folder.addMessageCountListener(new MessageCountAdapter() {
+            @Override
+            public void messagesAdded(MessageCountEvent e) {
+                ArrayList<LinkedList<Message>> newMessages = MessageUtility.getClassedMessageArray(e.getMessages());
+                for (int i = 0; i < 3 ; i++){
+                    logger.info("Prepare to add message data cell ...");
+                    updateMessageDataCell(tableList.get(i), newMessages.get(i), true);
+                }
+            }
+
+            @Override
+            public void messagesRemoved(MessageCountEvent e) {
+                ArrayList<LinkedList<Message>> newMessages = MessageUtility.getClassedMessageArray(e.getMessages());
+                for (int i = 0; i < 3; i++){
+                    logger.info("Prepare to delete message data cell ...");
+                    updateMessageDataCell(tableList.get(i), newMessages.get(i), false);
+                }
+            }
+        });
+
+        logger.info("Folder " + folder.getName() + " added !");
+        pnLeftColumn.getChildren().add(createFolderButton(folder));
+    }
+
+    private Button createFolderButton(IMAPFolder folder){
         logger.info("Prepare to create button ....");
         Button btnFolder = new Button(folder.getName());
         btnFolder.getStyleClass().add("btnFolder");
@@ -186,7 +215,7 @@ public class MailBoxController {
                             folder.open(Folder.READ_WRITE);
                         }
                         logger.info("Prepare to get messages ...");
-                        classedMessageList = MessageUtility.getClassedMessageArray(folder.getMessages(), 5);
+                        classedMessageList = MessageUtility.getClassedMessageArray(folder.getMessages(folder.getMessageCount()-15,folder.getMessageCount()));
                     } catch (MessagingException ex){
                         ex.printStackTrace();
                     }
@@ -203,13 +232,13 @@ public class MailBoxController {
     }
 
     private HBox createMailPreview(String content){
-        String[] splittedContent = content.split("SPLITTER");
+        String[] splitContent = content.split("SPLITTER");
 
         HBox box = new HBox();
-        Label subject = new Label(splittedContent[0]);
-        subject.setStyle("-fx-font-weight : bold;");
+        Label subject = new Label(splitContent[0]);
+        subject.setStyle("-fx-font-style: italic;");
 
-        Label preview = new Label(splittedContent[1]);
+        Label preview = new Label(splitContent[1]);
 
         box.getChildren().add(subject);
         box.getChildren().add(preview);
@@ -222,7 +251,12 @@ public class MailBoxController {
         ObservableList<MessageTableModel> messageObservableList = FXCollections.observableArrayList();
         messageObservableList.addListener((ListChangeListener<MessageTableModel>) c -> table.refresh());
 
-        new Thread(()-> messageObservableList.addAll(array.stream().map(MessageTableModel::new).collect(Collectors.toList()))).start();
+        new Thread(() -> {
+            sortBySentDate(array);
+            for (Message m : array){
+                messageObservableList.add(new MessageTableModel(m));
+            }
+        }).start();
 
         table.setItems(messageObservableList);
         ObservableList<TableColumn<MessageTableModel,?>> colList = table.getColumns();
@@ -244,6 +278,7 @@ public class MailBoxController {
 
     private void updateMessageDataCell(TableView<MessageTableModel> table, LinkedList<Message> array, boolean isAdded){
         if (isAdded){
+            sortBySentDate(array);
             table.getItems().addAll(array.stream().map(MessageTableModel::new).collect(Collectors.toList()));
             logger.info("Messages added to table !");
         } else {
@@ -251,6 +286,18 @@ public class MailBoxController {
             logger.info("Messages removed from table !");
         }
     }
+
+    private void sortBySentDate(LinkedList<Message> mList){
+        mList.sort((o1, o2) -> {
+            try {
+                return o1.getSentDate().compareTo(o2.getSentDate());
+            } catch (MessagingException e){
+                return 0;
+            }
+        });
+    }
+
+    // ------------------ END OF TABLE -----------------
 
     public void setCredentialsList(ArrayList<OAuthCredential> credentialsList) {
         this.credentialsList = credentialsList;

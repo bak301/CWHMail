@@ -84,7 +84,7 @@ public class OAuthUtility {
         while ((line = rd.readLine()) != null) {
             System.out.println(line);
             if (!line.contains("{") && !line.contains("}")){
-                String value = line.split(":")[1].replace(",","").replace("\"","");
+                String value = line.split(": ")[1].replace(",","").replace("\"","");
                 if (line.contains("access_token")){
                     credential.setAccess_token(value.trim());
                 } else if (line.contains("expires_in")){
@@ -115,7 +115,7 @@ public class OAuthUtility {
         while ((line = rd.readLine()) != null){
             System.out.println(line);
             if (!line.contains("{") && !line.contains("}")){
-                String value = line.split(":")[1].replace(",","").replace("\"","");
+                String value = line.split(": ")[1].replace(",","").replace("\"","");
                 if (line.contains("sub")){
                     userInfo.setGoogleid(value);
                 } else if (line.contains("\"name\"")){

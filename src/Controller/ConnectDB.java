@@ -59,31 +59,38 @@ public class ConnectDB {
                     "GOOGLEID TEXT NOT NULL," +
                     "NAME TEXT NOT NULL," +
                     "USERNAME TEXT NOT NULL," +
-                    "LINK TEXT," +
                     "PICTURE TEXT, " +
-                    "GENDER TEXT," +
                     "LOCALE TEXT )";
             stm.execute(createUserInfoTable);
+
+//            String createMessageTable = "CREATE TABLE IF NOT EXISTS MESSAGES (" +
+//                    "ID INTEGER PRIMARY KEY AUTOINCREMENT NOT NULL," +
+//                    "USERNAME TEXT NOT NULL," +
+//                    "STARRED TINYINT," +
+//                    "ATTACHMENT TINYINT," +
+//                    "READ TINYINT," +
+//                    "SUBJECT TEXT," +
+//                    "CONTENT TEXT," +
+//                    "SENTDATE TEXT )";
+//            stm.execute(createMessageTable);
             stm.close();
         } catch (SQLException e){
             e.printStackTrace();
         }
-        logger.log(Level.INFO, "Table UserAuth init completed !");
+        logger.log(Level.INFO, "Table initialized !");
     }
 
     // ---------------------------- TABLE USERINFO ---------------------------------------
     public boolean addUserInfo(UserInfo userInfo){
         try {
-            String addCredential = "INSERT INTO USERINFO (GOOGLEID,NAME,LINK,PICTURE,GENDER,LOCALE,USERNAME)" +
-                    " VALUES (?,?,?,?,?,?,?)";
+            String addCredential = "INSERT INTO USERINFO (GOOGLEID,NAME,PICTURE,LOCALE,USERNAME)" +
+                    " VALUES (?,?,?,?,?)";
             pstm = con.prepareStatement(addCredential);
             pstm.setString(1,userInfo.getGoogleid());
             pstm.setString(2,userInfo.getName());
-            pstm.setString(3,userInfo.getLink());
-            pstm.setString(4,userInfo.getPicture());
-            pstm.setString(5,userInfo.getGender());
-            pstm.setString(6,userInfo.getLocale());
-            pstm.setString(7,userInfo.getUsername());
+            pstm.setString(3,userInfo.getPicture());
+            pstm.setString(4,userInfo.getLocale());
+            pstm.setString(5,userInfo.getUsername());
 
             if (pstm.executeUpdate() != 0){
                 pstm.close();
@@ -111,9 +118,7 @@ public class ConnectDB {
                     currentUser.setGoogleid(rs.getString("GOOGLEID"));
                     currentUser.setUsername(rs.getString("USERNAME"));
                     currentUser.setName(rs.getString("NAME"));
-                    currentUser.setLink(rs.getString("LINK"));
                     currentUser.setPicture(rs.getString("PICTURE"));
-                    currentUser.setGender(rs.getString("GENDER"));
                     currentUser.setLocale(rs.getString("LOCALE"));
                     userInfoList.add(currentUser);
                 } while (rs.next());
@@ -136,7 +141,6 @@ public class ConnectDB {
             pstm.setString(2,credential.getAccess_token());
             pstm.setString(3,credential.getExpires_time());
             pstm.setString(4,credential.getRefresh_token());
-
             if (pstm.executeUpdate() != 0){
                 pstm.close();
                 logger.log(Level.SEVERE, "Add new credential successfully !");
@@ -195,6 +199,28 @@ public class ConnectDB {
         return credentialArrayList;
     }
 
+    public boolean relogUser(String name){
+        try {
+            stm = con.createStatement();
+            String relog = "UPDATE UserAuth SET ACTIVE=1 WHERE USERNAME=" + name;
+            return stm.execute(relog);
+        } catch (SQLException e){
+            e.printStackTrace();
+            return false;
+        }
+    }
+
+    public boolean logoutCredential(String username){
+        try {
+            stm = con.createStatement();
+            String logout = "UPDATE UserAuth SET ACTIVE=0 WHERE USERNAME=" + username;
+            return stm.execute(logout);
+        } catch (SQLException e){
+            e.printStackTrace();
+            return false;
+        }
+    }
+
     public String getRefreshToken(String username){
         String refresh_token = "";
         try {
@@ -210,5 +236,5 @@ public class ConnectDB {
         return refresh_token;
     }
 
-    //----------------------------------------- TABLE USERMESSAGES --------------------------------
+    //----------------------------------------- TABLE MESSAGES --------------------------------
 }

@@ -39,4 +39,11 @@ public class GmailLoginStage extends Stage{
         alert.setContentText("You can access your Gmail account now !");
         alert.show();
     }
+
+    public void alreadyLogIn(){
+        alert.setTitle("You are logged in already !");
+        alert.setHeaderText(null);
+        alert.setContentText("Your account is already connect to Gmail !");
+        alert.show();
+    }
 }

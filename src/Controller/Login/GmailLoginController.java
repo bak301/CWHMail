@@ -5,6 +5,7 @@ import Controller.Utility.OAuthUtility;
 import Model.OAuthCredential;
 import View.GmailLoginStage;
 import javafx.concurrent.Worker;
+import org.apache.http.auth.Credentials;
 import org.w3c.dom.events.EventTarget;
 import org.w3c.dom.html.HTMLHeadElement;
 import org.w3c.dom.html.HTMLInputElement;
@@ -22,6 +23,7 @@ public class GmailLoginController {
     public GmailLoginController(GmailLoginStage stage){
         this.stage = stage;
         this.credential = new OAuthCredential();
+        con = new ConnectDB();
     }
 
     public void addListener(){
@@ -37,7 +39,6 @@ public class GmailLoginController {
 
                     credential.setAuthorization_code(title.getTextContent().split("=")[1]);
                     if (OAuthUtility.createNewData(credential)){
-                        con = new ConnectDB();
                         con.addCredential(credential);
                         con.addUserInfo(credential.getUserInfo());
                         con.close();
@@ -60,6 +61,17 @@ public class GmailLoginController {
         nextButton.addEventListener("click", e -> {
             String usrname = input.getValue();
             usrname += (!usrname.contains("@"))?"@gmail.com":"";
+
+            if (con.getCredentials() != null){
+                for (OAuthCredential c : con.getCredentials()){
+                    if (c.getUsername().equals(usrname)){
+                        con.relogUser(usrname);
+
+                        stage.close();
+                        stage.alreadyLogIn();
+                    }
+                }
+            }
 
             credential.setUsername(usrname);
             credential.getUserInfo().setUsername(usrname);
