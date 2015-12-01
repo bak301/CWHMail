@@ -23,7 +23,7 @@ public class GmailLoginController {
     public GmailLoginController(GmailLoginStage stage){
         this.stage = stage;
         this.credential = new OAuthCredential();
-        con = new ConnectDB();
+        con = ConnectDB.defaultdb;
     }
 
     public void addListener(){

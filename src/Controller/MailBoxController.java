@@ -41,6 +41,26 @@ public class MailBoxController {
     private MenuButton mbPanelTop;
 
     @FXML
+    private Button btnAddMail;
+
+    @FXML
+    private void toComposeMail(){
+        ComposeViewController composeViewController = new ComposeViewController(imapController);
+        composeViewController.setCredential(credentialsList);
+        Parent root;
+        FXMLLoader loader = new FXMLLoader(getClass().getResource("../View/GUI/fxml/ComposeView.fxml"));
+        loader.setController(composeViewController);
+        Stage stage = new Stage();
+        try {
+            root = loader.load();
+            stage.setScene(new Scene(root));
+            stage.show();
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+    }
+
+    @FXML
     private Pane pnLeftColumn;
 
     @FXML
@@ -105,7 +125,10 @@ public class MailBoxController {
 
         task.stateProperty().addListener((ov,old,newState)->{
             if (newState == Worker.State.SUCCEEDED){
-                folderObservableList.addAll(imapController.getFolderList(imapController.getStoreList().get(0)).stream().collect(Collectors.toList()));
+                if (imapController.getStoreList().size() > 0){
+                    ArrayList<IMAPFolder> folders = imapController.getFolderList(imapController.getStoreList().get(0));
+                    folderObservableList.addAll(folders.stream().collect(Collectors.toList()));
+                }
                 lbFullname.setText(credentialsList.get(0).getUserInfo().getName());
             }
         });

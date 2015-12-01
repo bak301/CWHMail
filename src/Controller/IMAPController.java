@@ -71,7 +71,7 @@ public class IMAPController {
                 }
             }
         }
-        db.close();
+//        db.close();
         logger.log(Level.INFO, "Successfully connect all credentials to IMAP server !!");
     }
 

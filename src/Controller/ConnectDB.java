@@ -13,6 +13,7 @@ import java.util.logging.Logger;
  * Created by vn130 on 11/12/2015.
  */
 public class ConnectDB {
+    public static ConnectDB defaultdb = new ConnectDB();
     private Connection con;
     private Statement stm;
     private PreparedStatement pstm;

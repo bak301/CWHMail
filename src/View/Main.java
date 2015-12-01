@@ -17,7 +17,7 @@ public class Main extends Application {
     @Override
     public void start(Stage primaryStage) throws Exception{
         primaryStage.setTitle("Welcome !");
-        ConnectDB db = new ConnectDB();
+        ConnectDB db = ConnectDB.defaultdb;
         ArrayList<OAuthCredential> credentialsList = db.getCredentials();
 
         FXMLLoader loader;

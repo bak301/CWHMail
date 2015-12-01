@@ -27,7 +27,7 @@
                   <Image url="@../img/miniLogo.png" />
                </image>
             </ImageView>
-            <Button fx:id="btnAddMail" layoutX="222.0" layoutY="11.0" maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" mnemonicParsing="false" prefHeight="30.0" prefWidth="124.0" text="       Viết email" />
+            <Button fx:id="btnAddMail" layoutX="222.0" layoutY="11.0" maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" mnemonicParsing="false" onAction="#toComposeMail" prefHeight="30.0" prefWidth="124.0" text="       Viết email" />
             <Button fx:id="btnOption" layoutX="1095.0" layoutY="9.0" maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" mnemonicParsing="false" prefHeight="36.0" prefWidth="36.0" />
             <Button fx:id="btnListFriend" layoutX="1015.0" layoutY="10.0" maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" mnemonicParsing="false" prefHeight="33.0" prefWidth="40.0" />
             <Label fx:id="lbFullname" layoutX="812.0" layoutY="12.0" prefHeight="30.0" prefWidth="197.0" />
